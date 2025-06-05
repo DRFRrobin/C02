@@ -7,22 +7,38 @@
 </head>
 <body>
 <div id="menu" class="overlay">
-  <h1>Pong</h1>
-  <div id="history" class="history"></div>
-  <label>Joueur 1: <input id="p1Name" value="Joueur 1"></label>
-  <label>Joueur 2: <input id="p2Name" value="Joueur 2"></label>
-  <label>Mode:
-    <select id="mode">
-      <option value="pvp">1 vs 1</option>
-      <option value="ai">1 vs Ordinateur</option>
-    </select>
-  </label>
-  <label>Points pour gagner: <input id="maxScore" type="number" min="1" value="5"></label>
-  <label><input type="checkbox" id="infinite"> Infini</label>
-  <div class="buttons">
-    <button id="startBtn">Commencer</button>
+  <div id="startScreen">
+    <h1>Pong</h1>
+    <div id="history" class="history"></div>
+    <button id="beginBtn">Commencer</button>
     <button id="openSettings">Paramètres</button>
     <button class="back-button" onclick="window.location.href='index.html'">Menu principal</button>
+  </div>
+  <div id="config" class="hidden">
+    <div id="configPages">
+      <div class="page">
+        <h2>Mode de jeu</h2>
+        <select id="mode">
+          <option value="pvp">1 vs 1</option>
+          <option value="ai">1 vs Ordinateur</option>
+        </select>
+      </div>
+      <div class="page">
+        <h2>Score cible</h2>
+        <label>Points pour gagner: <input id="maxScore" type="number" min="1" value="5"></label>
+        <label><input type="checkbox" id="infinite"> Infini</label>
+        <label>Accélération après <input id="accelBounce" type="number" min="1" value="4"> rebonds</label>
+      </div>
+      <div class="page">
+        <h2>Noms des joueurs</h2>
+        <label>Joueur 1: <input id="p1Name" value="Joueur 1"></label>
+        <label>Joueur 2: <input id="p2Name" value="Joueur 2"></label>
+      </div>
+    </div>
+    <div class="buttons">
+      <button id="prevBtn">Retour</button>
+      <button id="nextBtn">Suivant</button>
+    </div>
   </div>
 </div>
 

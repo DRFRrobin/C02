@@ -9,6 +9,15 @@ const historyBox = document.getElementById('history');
 const pauseBtn = document.getElementById('pauseBtn');
 const pauseMenuBtn = document.getElementById('pauseMenuBtn');
 
+const beginBtn = document.getElementById('beginBtn');
+const startScreen = document.getElementById('startScreen');
+const config = document.getElementById('config');
+const configPages = document.getElementById('configPages');
+const pages = configPages.querySelectorAll('.page');
+const nextBtn = document.getElementById('nextBtn');
+const prevBtn = document.getElementById('prevBtn');
+const accelInput = document.getElementById('accelBounce');
+
 const p1NameInput = document.getElementById('p1Name');
 const p2NameInput = document.getElementById('p2Name');
 const modeSelect = document.getElementById('mode');
@@ -28,6 +37,9 @@ let infinite = false;
 let mode = 'pvp';
 let names = ['Joueur 1', 'Joueur 2'];
 let colors = ['#ffffff', '#ffffff'];
+let accelAfter = 4;
+let bounceCount = 0;
+let pageIndex = 0;
 
 function resize(){
   canvas.width = window.innerWidth;
@@ -41,6 +53,7 @@ resize();
 function loadPrefs(){
   const data = JSON.parse(localStorage.getItem('pongPrefs')||'{}');
   if(data.colors){ colors = data.colors; color1Input.value = colors[0]; color2Input.value = colors[1]; }
+  maxScoreInput.disabled = infiniteCheckbox.checked;
 }
 function savePrefs(){
   localStorage.setItem('pongPrefs', JSON.stringify({colors}));
@@ -57,6 +70,13 @@ function addHistory(entry){
   localStorage.setItem('pongHistory', JSON.stringify(hist));
 }
 
+function showPage(i){
+  pageIndex = i;
+  configPages.style.transform = `translateX(-${i * 100}%)`;
+  prevBtn.textContent = i === 0 ? 'Retour' : 'Précédent';
+  nextBtn.textContent = i === pages.length - 1 ? 'Démarrer' : 'Suivant';
+}
+
 function initPositions(){
   p1Y = height/2 - 40;
   p2Y = height/2 - 40;
@@ -71,10 +91,12 @@ function startGame(){
   mode = modeSelect.value;
   maxScore = parseInt(maxScoreInput.value,10)||5;
   infinite = infiniteCheckbox.checked;
+  accelAfter = parseInt(accelInput.value,10)||4;
   score1 = 0; score2 = 0;
   running = true; demo = false; paused = false;
   menu.classList.add('hidden');
   pauseBtn.classList.remove('hidden');
+  bounceCount = 0;
   initPositions();
 }
 
@@ -108,14 +130,32 @@ pauseMenuBtn.addEventListener('click', () => {
   pauseOverlay.classList.add('hidden');
   endOverlay.classList.add('hidden');
   menu.classList.remove('hidden');
+  startScreen.classList.remove('hidden');
+  config.classList.add('hidden');
   demo=true;
   loadHistory();
 });
 document.getElementById('quitBtn').addEventListener('click', () => {paused=false;pauseOverlay.classList.add('hidden');endGame();});
-document.getElementById('startBtn').addEventListener('click', startGame);
+beginBtn.addEventListener('click', () => {startScreen.classList.add('hidden');config.classList.remove('hidden');showPage(0);});
+nextBtn.addEventListener('click', () => {
+  if(pageIndex===pages.length-1){
+    startGame();
+  }else{
+    showPage(pageIndex+1);
+  }
+});
+prevBtn.addEventListener('click', () => {
+  if(pageIndex===0){
+    config.classList.add('hidden');
+    startScreen.classList.remove('hidden');
+  }else{
+    showPage(pageIndex-1);
+  }
+});
 document.getElementById('openSettings').addEventListener('click', () => settings.classList.remove('hidden'));
 document.getElementById('closeSettings').addEventListener('click', () => {colors=[color1Input.value,color2Input.value];savePrefs();settings.classList.add('hidden');});
-document.getElementById('endMenuBtn').addEventListener('click', ()=>{endOverlay.classList.add('hidden');menu.classList.remove('hidden');demo=true;loadHistory();});
+document.getElementById('endMenuBtn').addEventListener('click', ()=>{endOverlay.classList.add('hidden');menu.classList.remove('hidden');startScreen.classList.remove('hidden');config.classList.add('hidden');demo=true;loadHistory();});
+infiniteCheckbox.addEventListener('change', ()=>{maxScoreInput.disabled=infiniteCheckbox.checked;});
 
 const keys = {};
 document.addEventListener('keydown', e=>{keys[e.key]=true;if(e.key==='Escape')togglePause();});
@@ -143,8 +183,16 @@ function update(){
     ballX+=ballVX;
     ballY+=ballVY;
     if(ballY<=0||ballY>=height) ballVY*=-1;
-    if(ballX<=30&&ballY>p1Y&&ballY<p1Y+80){ballVX=Math.abs(ballVX);}
-    if(ballX>=width-30&&ballY>p2Y&&ballY<p2Y+80){ballVX=-Math.abs(ballVX);}
+    if(ballX<=30&&ballY>p1Y&&ballY<p1Y+80){
+      ballVX=Math.abs(ballVX);
+      bounceCount++;
+      if(bounceCount%accelAfter===0){ballVX*=1.2;ballVY*=1.2;}
+    }
+    if(ballX>=width-30&&ballY>p2Y&&ballY<p2Y+80){
+      ballVX=-Math.abs(ballVX);
+      bounceCount++;
+      if(bounceCount%accelAfter===0){ballVX*=1.2;ballVY*=1.2;}
+    }
     if(ballX<0){score2++;resetBall();}
     if(ballX>width){score1++;resetBall();}
     if(running&&!infinite&&(score1>=maxScore||score2>=maxScore)) endGame();
@@ -152,7 +200,11 @@ function update(){
 }
 
 function resetBall(){
-  ballX=width/2;ballY=height/2;ballVX*=-1;ballVY=(Math.random()*4-2);
+  ballX=width/2;
+  ballY=height/2;
+  ballVX = (Math.random()<0.5?4:-4);
+  ballVY = (Math.random()*4-2);
+  bounceCount=0;
 }
 
 function draw(){
