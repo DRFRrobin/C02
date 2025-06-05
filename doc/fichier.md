@@ -22,3 +22,10 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : rappeler de mettre à jour `doc/fichier.md` lors des contributions.
 - **Objectif** : s'assurer que chaque changement soit tracé dans l'historique du projet.
 - **Résultat** : ajout d'une section "Contribuer" dans le README précisant de mettre à jour `doc/fichier.md`.
+
+## 2025-06-06
+
+- **Demande** : ajouter une tuile de crédits avec C02-team DRFR0bin Ghoster CODEX et Loss.
+- **Objectif** : afficher les crédits depuis le menu principal.
+- **Résultat** : ajout de `public/credits.html` et mise à jour de `public/apps.json` pour inclure la tuile "Crédits".
+
