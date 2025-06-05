@@ -7,22 +7,46 @@
 </head>
 <body>
 <div id="menu" class="overlay">
-  <h1>Pong</h1>
-  <div id="history" class="history"></div>
-  <label>Joueur 1: <input id="p1Name" value="Joueur 1"></label>
-  <label>Joueur 2: <input id="p2Name" value="Joueur 2"></label>
-  <label>Mode:
-    <select id="mode">
-      <option value="pvp">1 vs 1</option>
-      <option value="ai">1 vs Ordinateur</option>
-    </select>
-  </label>
-  <label>Points pour gagner: <input id="maxScore" type="number" min="1" value="5"></label>
-  <label><input type="checkbox" id="infinite"> Infini</label>
-  <div class="buttons">
-    <button id="startBtn">Commencer</button>
-    <button id="openSettings">Paramètres</button>
-    <button class="back-button" onclick="window.location.href='index.html'">Menu principal</button>
+  <div id="pages" class="pages">
+    <div class="page" id="page0">
+      <h1>Pong</h1>
+      <div id="history" class="history"></div>
+      <div class="buttons">
+        <button id="startBtn">Commencer</button>
+        <button id="openSettings">Paramètres</button>
+        <button class="back-button" onclick="window.location.href='index.html'">Menu principal</button>
+      </div>
+    </div>
+    <div class="page" id="page1">
+      <h2>Mode de jeu</h2>
+      <label>
+        <select id="mode">
+          <option value="pvp">1 vs 1</option>
+          <option value="ai">1 vs Ordinateur</option>
+        </select>
+      </label>
+      <div class="nav">
+        <button class="prev">Retour</button>
+        <button class="next">Suivant</button>
+      </div>
+    </div>
+    <div class="page" id="page2">
+      <label>Points pour gagner: <input id="maxScore" type="number" min="1" value="5"></label>
+      <label><input type="checkbox" id="infinite"> Infini</label>
+      <label>Accélération toutes les <input id="accel" type="number" min="0" value="0"> frappes</label>
+      <div class="nav">
+        <button class="prev">Retour</button>
+        <button class="next">Suivant</button>
+      </div>
+    </div>
+    <div class="page" id="page3">
+      <label>Joueur 1: <input id="p1Name" value="Joueur 1"></label>
+      <label>Joueur 2: <input id="p2Name" value="Joueur 2"></label>
+      <div class="nav">
+        <button class="prev">Retour</button>
+        <button id="launch">Jouer</button>
+      </div>
+    </div>
   </div>
 </div>
 
