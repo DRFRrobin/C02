@@ -1,10 +1,13 @@
+const startBtn = document.getElementById('startBtn');
+startBtn.disabled = true; // disable button until texts load
 let texts={};
 fetch('emoji-texts.json').then(r=>r.json()).then(data=>{
   const lang=navigator.language.startsWith('fr')?'fr':'en';
   texts=data[lang];
   document.title=texts.title;
   document.getElementById('title').textContent=texts.title;
-  document.getElementById('startBtn').textContent=texts.start;
+  startBtn.textContent=texts.start;
+  startBtn.disabled=false; // re-enable after texts are ready
   updateHUD();
 });
 
@@ -45,16 +48,15 @@ function updateHUD(){document.getElementById('score').textContent=score;document
 function start(){
   if(running)return; // avoid extra loops
   score=0;lives=3;items=[];running=true;last=0;spawn=interval;
-  const btn=document.getElementById('startBtn');
-  btn.textContent=texts.restart;
-  btn.disabled=true; // disable while game active
+  startBtn.textContent=texts.restart;
+  startBtn.disabled=true; // disable while game active
   loop();
 }
 
 function gameOver(){
   running=false;ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(0,0,width,height);ctx.fillStyle='#fff';ctx.font='30px Arial';ctx.fillText(texts.gameOver,width/2-ctx.measureText(texts.gameOver).width/2,height/2);
   high=Math.max(high,score);localStorage.setItem('emojiHigh',high);updateHUD();
-  document.getElementById('startBtn').disabled=false;
+  startBtn.disabled=false;
 }
 
-document.getElementById('startBtn').addEventListener('click',start);
+startBtn.addEventListener('click',start);
