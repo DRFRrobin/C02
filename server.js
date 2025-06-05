@@ -31,6 +31,17 @@ app.use(
   })
 );
 
+app.use((req, res, next) => {
+  if (
+    req.path.endsWith('.html') &&
+    req.path !== '/index.html' &&
+    !req.session.user
+  ) {
+    return res.redirect('/index.html');
+  }
+  next();
+});
+
 app.use(express.static(__dirname));
 
 app.post('/api/login', (req, res) => {
