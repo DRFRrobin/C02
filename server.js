@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const session = require('express-session');
 
+const GAMES_DIR = path.join(__dirname, 'games');
+
 const app = express();
 const USERS_FILE = path.join(__dirname, 'users.json');
 
@@ -109,6 +111,26 @@ app.delete('/api/users/:username', (req, res) => {
   users.splice(idx, 1);
   saveUsers(users);
   res.json({ ok: true });
+});
+
+app.get('/api/games', (req, res) => {
+  fs.readdir(GAMES_DIR, (err, files) => {
+    if (err) return res.status(500).json({ error: 'fs' });
+    const games = [];
+    files
+      .filter((f) => f.endsWith('.html') && f !== 'index.html')
+      .forEach((f) => {
+        const filePath = path.join(GAMES_DIR, f);
+        let title = path.basename(f, '.html');
+        try {
+          const contents = fs.readFileSync(filePath, 'utf8');
+          const m = contents.match(/<title>([^<]+)<\/title>/i);
+          if (m) title = m[1];
+        } catch (e) {}
+        games.push({ id: path.basename(f, '.html'), name: title, link: f });
+      });
+    res.json({ games });
+  });
 });
 
 const PORT = process.env.PORT || 3000;
