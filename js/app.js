@@ -1,4 +1,7 @@
-const tilesContainer = document.getElementById('tiles');
+const dynamicTiles = document.getElementById('appTiles');
+const settingsTile = document.getElementById('settingsTile');
+const usersTile = document.getElementById('usersTile');
+const tilesContainer = dynamicTiles;
 const settingsModal = document.getElementById('settings');
 const autoUpdateCheckbox = document.getElementById('autoUpdate');
 const manualUpdateButton = document.getElementById('manualUpdate');
@@ -17,6 +20,7 @@ const cancelSignup = document.getElementById('cancelSignup');
 const logoutBtn = document.getElementById('logoutBtn');
 
 let currentUser = null;
+let autoUpdateInterval = null;
 
 async function fetchCurrent() {
   const r = await fetch('/api/current');
@@ -49,17 +53,22 @@ function doLogin(){
   }).catch(() => alert('Identifiants incorrects'));
 }
 
-function showApp(){
+async function showApp(){
   loginForm.classList.add('hidden');
   appContainer.classList.remove('hidden');
-  if (localStorage.getItem('autoUpdate') !== 'false') {
-    load();
-  } else {
-    renderTiles([]);
-  }
+  const prefs = await fetchPreferences();
+  autoUpdateCheckbox.checked = prefs.autoUpdate;
+  await load();
+  setupAutoUpdate(prefs.autoUpdate);
+  updateAdminTile();
 }
 
 function showLogin(){
+  if (autoUpdateInterval) {
+    clearInterval(autoUpdateInterval);
+    autoUpdateInterval = null;
+  }
+  updateAdminTile();
   appContainer.classList.add('hidden');
   loginForm.classList.remove('hidden');
 }
@@ -98,6 +107,18 @@ function fetchApps() {
   return fetch('apps.json').then(r => r.json());
 }
 
+function fetchPreferences() {
+  return fetch('/api/preferences').then(r => r.json());
+}
+
+function savePreferences(value) {
+  return fetch('/api/preferences', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ autoUpdate: value })
+  });
+}
+
 function renderTiles(apps) {
   tilesContainer.innerHTML = '';
   apps.forEach(app => {
@@ -105,24 +126,40 @@ function renderTiles(apps) {
     const div = document.createElement('div');
     div.className = 'tile';
     div.textContent = app.name;
-    if (app.settings) {
-      div.addEventListener('click', () => settingsModal.classList.remove('hidden'));
-    } else {
-      div.addEventListener('click', () => window.location.href = app.link);
-    }
+    div.addEventListener('click', () => window.location.href = app.link);
     tilesContainer.appendChild(div);
   });
 }
 
 function load() {
-  autoUpdateCheckbox.checked = localStorage.getItem('autoUpdate') !== 'false';
-  fetchApps().then(data => renderTiles(data.apps));
+  return fetchApps().then(data => renderTiles(data.apps));
+}
+
+function setupAutoUpdate(enabled){
+  if (autoUpdateInterval){
+    clearInterval(autoUpdateInterval);
+    autoUpdateInterval = null;
+  }
+  if(enabled){
+    autoUpdateInterval = setInterval(load, 30000);
+  }
+}
+
+function updateAdminTile(){
+  if(isAdmin()){
+    usersTile.classList.remove('hidden');
+  } else {
+    usersTile.classList.add('hidden');
+  }
 }
 
 manualUpdateButton.addEventListener('click', load);
 autoUpdateCheckbox.addEventListener('change', e => {
-  localStorage.setItem('autoUpdate', e.target.checked);
+  savePreferences(e.target.checked);
+  setupAutoUpdate(e.target.checked);
 });
+settingsTile.addEventListener('click', () => settingsModal.classList.remove('hidden'));
+usersTile.addEventListener('click', () => window.location.href = 'users.html');
 closeSettingsButton.addEventListener('click', () => settingsModal.classList.add('hidden'));
 
 loginBtn.addEventListener('click', doLogin);

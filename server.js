@@ -53,6 +53,15 @@ app.get('/api/current', (req, res) => {
   res.json({ user: req.session.user || null });
 });
 
+app.get('/api/preferences', (req, res) => {
+  res.json({ autoUpdate: req.session.autoUpdate !== false });
+});
+
+app.post('/api/preferences', (req, res) => {
+  req.session.autoUpdate = !!req.body.autoUpdate;
+  res.json({ ok: true });
+});
+
 app.get('/api/users', (req, res) => {
   if (!req.session.user || req.session.user.role !== 'admin') {
     return res.status(403).json({ error: 'forbidden' });
