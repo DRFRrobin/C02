@@ -35,3 +35,9 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Objectif** : forcer l'import complet du dépôt et notifier l'utilisateur à la fin.
 - **Résultat** : `/api/update` récupère désormais tout le dépôt avec `fetch --all` suivi d'un `reset --hard` et l'interface affiche un message lorsque l'import est terminé.
 
+## 2025-06-08
+
+- **Demande** : les boutons "Retour" ne réagissent pas dans le navigateur.
+- **Objectif** : autoriser les gestionnaires d'événements inline utilisés par les boutons.
+- **Résultat** : configuration de **helmet** pour relâcher la Content Security Policy et permettre `onclick="navigate(...)`.
+
