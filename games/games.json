@@ -1,0 +1,6 @@
+{
+  "games": [
+    { "id": "pong", "name": "Pong", "link": "pong.html" },
+    { "id": "connect4", "name": "Puissance 4", "link": "connect4.html" }
+  ]
+}
