@@ -12,7 +12,17 @@ const GAMES_DIR = path.join(__dirname, 'public', 'games');
 
 const app = express();
 app.disable('x-powered-by');
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrcAttr: ["'unsafe-inline'"]
+      },
+    },
+  })
+);
 const USERS_FILE = path.join(__dirname, 'users.json');
 
 function loadUsers() {
