@@ -38,7 +38,7 @@ table.addEventListener('click', e => {
   if (e.target.dataset.edit) {
     const u = users[e.target.dataset.edit];
     nameInput.value = u.username;
-    passInput.value = u.password;
+    passInput.value = '';
     roleInput.value = u.role;
     editIndex = e.target.dataset.edit;
   } else if (e.target.dataset.del) {

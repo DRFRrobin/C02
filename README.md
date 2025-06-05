@@ -5,6 +5,7 @@ Ce dépôt contient une petite interface web permettant de lancer différentes a
 ## Prérequis
 
 Installez **Node.js** pour lancer le serveur Express qui stocke désormais les utilisateurs côté serveur.
+Les dépendances incluent maintenant le module **bcrypt** pour le hachage des mots de passe.
 
 - **Linux (Debian/Ubuntu)** :
   ```bash
@@ -27,7 +28,8 @@ Pour des informations détaillées, consultez [doc/node-installation.md](doc/nod
 2. Dans votre navigateur, rendez‑vous sur [http://localhost:3000/index.html](http://localhost:3000/index.html).
 3. Les tuiles disponibles s'affichent automatiquement à partir du fichier `apps.json`.
 
-Lors du premier lancement, un utilisateur **admin/admin** est créé automatiquement. Une petite fenêtre de connexion s'affiche : saisissez ces identifiants pour accéder à la plateforme.
+Lors du premier lancement, un utilisateur **admin/admin** est créé automatiquement. Les mots de passe sont maintenant chiffrés avec **bcrypt** et les mots de passe existants sont convertis au premier démarrage.
+Une petite fenêtre de connexion s'affiche : saisissez ces identifiants pour accéder à la plateforme.
 Il est désormais possible de créer d'autres comptes directement depuis l'écran de connexion grâce au bouton **"Créer un compte"**. Une fois connecté, un bouton **"Déconnexion"** apparaît en haut à droite pour revenir à l'écran de connexion.
 
 ## Fonctionnement
