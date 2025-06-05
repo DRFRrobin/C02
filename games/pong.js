@@ -2,6 +2,7 @@ const canvas = document.getElementById('pong');
 const ctx = canvas.getContext('2d');
 
 const menu = document.getElementById('menu');
+const pages = document.getElementById('pages');
 const settings = document.getElementById('settings');
 const pauseOverlay = document.getElementById('pause');
 const endOverlay = document.getElementById('end');
@@ -14,6 +15,7 @@ const p2NameInput = document.getElementById('p2Name');
 const modeSelect = document.getElementById('mode');
 const maxScoreInput = document.getElementById('maxScore');
 const infiniteCheckbox = document.getElementById('infinite');
+const accelInput = document.getElementById('accel');
 const color1Input = document.getElementById('color1');
 const color2Input = document.getElementById('color2');
 
@@ -26,8 +28,11 @@ let demo = true;
 let maxScore = 5;
 let infinite = false;
 let mode = 'pvp';
+let accelInterval = 0;
+let bounceCount = 0;
 let names = ['Joueur 1', 'Joueur 2'];
 let colors = ['#ffffff', '#ffffff'];
+let currentPage = 0;
 
 function resize(){
   canvas.width = window.innerWidth;
@@ -71,11 +76,13 @@ function startGame(){
   mode = modeSelect.value;
   maxScore = parseInt(maxScoreInput.value,10)||5;
   infinite = infiniteCheckbox.checked;
+  accelInterval = parseInt(accelInput.value,10)||0;
   score1 = 0; score2 = 0;
   running = true; demo = false; paused = false;
   menu.classList.add('hidden');
   pauseBtn.classList.remove('hidden');
   initPositions();
+  bounceCount = 0;
 }
 
 function endGame(){
@@ -109,13 +116,23 @@ pauseMenuBtn.addEventListener('click', () => {
   endOverlay.classList.add('hidden');
   menu.classList.remove('hidden');
   demo=true;
+  currentPage=0;
+  updatePage();
   loadHistory();
 });
 document.getElementById('quitBtn').addEventListener('click', () => {paused=false;pauseOverlay.classList.add('hidden');endGame();});
-document.getElementById('startBtn').addEventListener('click', startGame);
+function updatePage(){
+  pages.style.transform = `translateX(-${currentPage*100}%)`;
+}
+
+document.getElementById('startBtn').addEventListener('click', () => {currentPage=1;updatePage();});
+document.querySelectorAll('.next').forEach(btn=>btn.addEventListener('click',()=>{currentPage++;updatePage();}));
+document.querySelectorAll('.prev').forEach(btn=>btn.addEventListener('click',()=>{currentPage=Math.max(0,currentPage-1);updatePage();}));
+document.getElementById('launch').addEventListener('click', startGame);
+infiniteCheckbox.addEventListener('change',()=>{maxScoreInput.disabled=infiniteCheckbox.checked;});
 document.getElementById('openSettings').addEventListener('click', () => settings.classList.remove('hidden'));
 document.getElementById('closeSettings').addEventListener('click', () => {colors=[color1Input.value,color2Input.value];savePrefs();settings.classList.add('hidden');});
-document.getElementById('endMenuBtn').addEventListener('click', ()=>{endOverlay.classList.add('hidden');menu.classList.remove('hidden');demo=true;loadHistory();});
+document.getElementById('endMenuBtn').addEventListener('click', ()=>{endOverlay.classList.add('hidden');menu.classList.remove('hidden');demo=true;currentPage=0;updatePage();loadHistory();});
 
 const keys = {};
 document.addEventListener('keydown', e=>{keys[e.key]=true;if(e.key==='Escape')togglePause();});
@@ -127,24 +144,25 @@ function update(){
   if(running || demo){
     if(demo){
       p1Y+=(ballY-p1Y-40)*0.05;
+      p2Y+=(ballY-p2Y-40)*0.05;
     }else{
       if(keys['z']||keys['Z']) p1Y-=speed;
       if(keys['s']||keys['S']) p1Y+=speed;
-    }
 
-    if(mode==='pvp'){
-      if(keys['ArrowUp']) p2Y-=speed;
-      if(keys['ArrowDown']) p2Y+=speed;
-    }else{
-      p2Y+=(ballY-p2Y-40)*0.05;
+      if(mode==='pvp'){
+        if(keys['ArrowUp']) p2Y-=speed;
+        if(keys['ArrowDown']) p2Y+=speed;
+      }else{
+        p2Y+=(ballY-p2Y-40)*0.05;
+      }
     }
     p1Y=Math.max(0,Math.min(height-80,p1Y));
     p2Y=Math.max(0,Math.min(height-80,p2Y));
     ballX+=ballVX;
     ballY+=ballVY;
     if(ballY<=0||ballY>=height) ballVY*=-1;
-    if(ballX<=30&&ballY>p1Y&&ballY<p1Y+80){ballVX=Math.abs(ballVX);}
-    if(ballX>=width-30&&ballY>p2Y&&ballY<p2Y+80){ballVX=-Math.abs(ballVX);}
+    if(ballX<=30&&ballY>p1Y&&ballY<p1Y+80){ballVX=Math.abs(ballVX);bounce();}
+    if(ballX>=width-30&&ballY>p2Y&&ballY<p2Y+80){ballVX=-Math.abs(ballVX);bounce();}
     if(ballX<0){score2++;resetBall();}
     if(ballX>width){score1++;resetBall();}
     if(running&&!infinite&&(score1>=maxScore||score2>=maxScore)) endGame();
@@ -152,7 +170,15 @@ function update(){
 }
 
 function resetBall(){
-  ballX=width/2;ballY=height/2;ballVX*=-1;ballVY=(Math.random()*4-2);
+  ballX=width/2;ballY=height/2;ballVX*=-1;ballVY=(Math.random()*4-2);bounceCount=0;
+}
+
+function bounce(){
+  bounceCount++;
+  if(accelInterval && bounceCount % accelInterval === 0){
+    ballVX*=1.1;
+    ballVY*=1.1;
+  }
 }
 
 function draw(){
@@ -177,4 +203,6 @@ function loop(){
 loadPrefs();
 loadHistory();
 initPositions();
+updatePage();
+infiniteCheckbox.dispatchEvent(new Event('change'));
 loop();
