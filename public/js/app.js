@@ -1,3 +1,4 @@
+// Sélection des éléments de l'interface
 const dynamicTiles = document.getElementById('appTiles');
 const settingsBtn = document.getElementById('settingsBtn');
 const usersBtn = document.getElementById('usersBtn');
@@ -22,9 +23,11 @@ const updateOverlay = document.getElementById('updateOverlay');
 const updateBar = document.querySelector('#updateProgress div');
 const updateMessage = document.getElementById('updateMessage');
 
+// Utilisateur connecté et timer de mise à jour
 let currentUser = null;
 let autoUpdateInterval = null;
 
+// Lance la mise à jour via l'API et affiche une barre de progression
 async function checkUpdate(){
   updateMessage.textContent = 'Importation en cours...';
   updateOverlay.classList.remove('hidden');
@@ -49,6 +52,7 @@ async function checkUpdate(){
   updateMessage.textContent = 'Recherche de mise à jour...';
 }
 
+// Récupère l'utilisateur connecté auprès du serveur
 async function fetchCurrent() {
   const r = await fetch('/api/current');
   if (r.ok) {
@@ -59,10 +63,12 @@ async function fetchCurrent() {
   }
 }
 
+// Vérifie si l'utilisateur courant est administrateur
 function isAdmin(){
   return currentUser && currentUser.role === 'admin';
 }
 
+// Envoie les informations de connexion au serveur
 function doLogin(){
   fetch('/api/login', {
     method: 'POST',
@@ -80,6 +86,7 @@ function doLogin(){
   }).catch(() => alert('Identifiants incorrects'));
 }
 
+// Affiche l'application après connexion
 async function showApp(){
   loginForm.classList.add('hidden');
   appContainer.classList.remove('hidden');
@@ -91,6 +98,7 @@ async function showApp(){
   updateAdminTile();
 }
 
+// Retour à l'écran de connexion
 function showLogin(){
   if (autoUpdateInterval) {
     clearInterval(autoUpdateInterval);
@@ -101,6 +109,7 @@ function showLogin(){
   loginForm.classList.remove('hidden');
 }
 
+// Déconnexion manuelle
 function logout(){
   fetch('/api/logout', {method:'POST'}).then(() => {
     currentUser = null;
@@ -108,6 +117,7 @@ function logout(){
   });
 }
 
+// Création d'un compte utilisateur depuis l'écran d'inscription
 function createUser(){
   if(!signupUser.value || !signupPass.value){
     alert('Champs manquants');
@@ -131,14 +141,17 @@ function createUser(){
   }).catch(()=>{});
 }
 
+// Charge la liste des applications disponibles
 function fetchApps() {
   return fetch('apps.json').then(r => r.json());
 }
 
+// Lit les préférences utilisateur
 function fetchPreferences() {
   return fetch('/api/preferences').then(r => r.json());
 }
 
+// Sauvegarde la préférence de mise à jour automatique
 function savePreferences(value) {
   return fetch('/api/preferences', {
     method: 'POST',
@@ -147,6 +160,7 @@ function savePreferences(value) {
   });
 }
 
+// Affiche dynamiquement les tuiles des applications
 function renderTiles(apps) {
   tilesContainer.innerHTML = '';
   apps.forEach(app => {
@@ -159,10 +173,12 @@ function renderTiles(apps) {
   });
 }
 
+// Recharge la liste des applications
 function load() {
   return fetchApps().then(data => renderTiles(data.apps));
 }
 
+// Active ou désactive la mise à jour automatique
 function setupAutoUpdate(enabled){
   if (autoUpdateInterval){
     clearInterval(autoUpdateInterval);
@@ -173,6 +189,7 @@ function setupAutoUpdate(enabled){
   }
 }
 
+// Affiche le bouton d'administration si besoin
 function updateAdminTile(){
   if(isAdmin()){
     usersBtn.classList.remove('hidden');
@@ -181,6 +198,7 @@ function updateAdminTile(){
   }
 }
 
+// Gestion des différents boutons de l'interface
 manualUpdateButton.addEventListener('click', load);
 autoUpdateCheckbox.addEventListener('change', e => {
   savePreferences(e.target.checked);
@@ -190,14 +208,17 @@ settingsBtn.addEventListener('click', () => settingsModal.classList.remove('hidd
 usersBtn.addEventListener('click', () => navigate('users.html'));
 closeSettingsButton.addEventListener('click', () => settingsModal.classList.add('hidden'));
 
+// Raccourcis clavier et boutons de connexion
 loginBtn.addEventListener('click', doLogin);
 loginUser.addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
 loginPass.addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
+// Gestion du formulaire d'inscription
 openSignup.addEventListener('click', () => signupForm.classList.remove('hidden'));
 cancelSignup.addEventListener('click', () => signupForm.classList.add('hidden'));
 createUserBtn.addEventListener('click', createUser);
 logoutBtn.addEventListener('click', logout);
 
+// Au chargement, on vérifie si l'utilisateur est déjà connecté
 fetchCurrent().then(() => {
   if (currentUser) {
     showApp();

@@ -1,3 +1,4 @@
+// Paramètres du plateau
 const ROWS = 6, COLS = 7;
 let board = [];
 let currentPlayer = 1;
@@ -6,10 +7,12 @@ const statusEl = document.getElementById('status');
 const boardContainer = document.getElementById('boardContainer');
 const restartBtn = document.getElementById('restart');
 
+// Initialise un plateau vide
 function initBoard() {
   board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
 }
 
+// Affiche le plateau de jeu dans la page
 function renderBoard() {
   const table = document.createElement('table');
   for (let r = 0; r < ROWS; r++) {
@@ -27,6 +30,7 @@ function renderBoard() {
   boardContainer.appendChild(table);
 }
 
+// Place un jeton dans la colonne donnée
 function makeMove(col) {
   for (let r = ROWS - 1; r >= 0; r--) {
     if (board[r][col] === 0) {
@@ -37,6 +41,7 @@ function makeMove(col) {
   return -1;
 }
 
+// Compte le nombre de jetons identiques dans une direction
 function countInDirection(r, c, dr, dc) {
   const player = board[r][c];
   let n = 0;
@@ -49,6 +54,7 @@ function countInDirection(r, c, dr, dc) {
   return n;
 }
 
+// Vérifie si le coup joué est gagnant
 function checkWin(r, c) {
   const dirs = [
     [1, 0],
@@ -61,10 +67,12 @@ function checkWin(r, c) {
   );
 }
 
+// Teste si le plateau est plein
 function isBoardFull() {
   return board.every((row) => row.every((cell) => cell !== 0));
 }
 
+// Recherche la première case libre d'une colonne
 function getNextOpenRow(col) {
   for (let r = ROWS - 1; r >= 0; r--) {
     if (board[r][col] === 0) return r;
@@ -72,6 +80,7 @@ function getNextOpenRow(col) {
   return -1;
 }
 
+// Liste les colonnes encore jouables
 function getAvailableCols() {
   const cols = [];
   for (let c = 0; c < COLS; c++) {
@@ -80,6 +89,7 @@ function getAvailableCols() {
   return cols;
 }
 
+// Cherche un coup gagnant pour le joueur donné
 function findWinningMove(player) {
   for (let c = 0; c < COLS; c++) {
     const r = getNextOpenRow(c);
@@ -92,12 +102,14 @@ function findWinningMove(player) {
   return -1;
 }
 
+// Affiche le message de fin de partie
 function endGame(message) {
   statusEl.textContent = message;
   boardContainer.removeEventListener('click', handleClick);
   restartBtn.classList.remove('hidden');
 }
 
+// Gère le clic sur le plateau
 function handleClick(e) {
   const col = parseInt(e.target.dataset.col, 10);
   if (isNaN(col)) return;
@@ -119,6 +131,7 @@ function handleClick(e) {
   }
 }
 
+// IA très simple pour l'ordinateur
 function aiMove() {
   let col = findWinningMove(2);
   if (col === -1) {
@@ -148,6 +161,7 @@ function aiMove() {
   statusEl.textContent = 'Joueur 1';
 }
 
+// Lance une nouvelle partie
 function startGame(ai) {
   vsAI = ai;
   initBoard();
@@ -160,6 +174,7 @@ function startGame(ai) {
   boardContainer.addEventListener('click', handleClick);
 }
 
+// Retour au menu principal
 function backToMenu() {
   boardContainer.classList.add('hidden');
   document.getElementById('menu').classList.remove('hidden');
@@ -167,6 +182,7 @@ function backToMenu() {
   statusEl.textContent = '';
 }
 
+// Boutons de contrôle
 restartBtn.addEventListener('click', backToMenu);
 document.getElementById('pvp').addEventListener('click', () => startGame(false));
 document.getElementById('pvai').addEventListener('click', () => startGame(true));
