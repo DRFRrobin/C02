@@ -12,6 +12,7 @@ Installez **Node.js** pour lancer le serveur Express qui stocke désormais les u
   sudo apt install nodejs npm
   ```
 - **Windows/macOS** : [Téléchargez Node.js](https://nodejs.org/) et suivez l'installeur.
+Pour des informations détaillées, consultez [doc/node-installation.md](doc/node-installation.md).
 
 ## Tester en local
 
