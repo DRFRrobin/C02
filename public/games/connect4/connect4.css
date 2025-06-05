@@ -1,0 +1,11 @@
+body{margin:0;background:#000;color:#fff;font-family:Arial,sans-serif;text-align:center}
+.hidden{display:none}
+.overlay{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.8);padding:20px;border-radius:8px;text-align:center;color:#fff;overflow:hidden;z-index:10;width:80%;max-width:500px}
+table{border-spacing:5px;margin:20px auto;background:#0055a4;padding:10px;border-radius:10px;box-shadow:0 0 10px rgba(0,0,0,0.3)}
+td{width:60px;height:60px;border-radius:50%;background:#eee;cursor:pointer;transition:background 0.3s}
+td:hover{background:#ddd}
+.p1{background:red}
+.p2{background:yellow}
+#menu button,#restart{margin:10px;padding:10px 20px;background:#0055a4;border:none;border-radius:5px;color:#fff;cursor:pointer}
+#menu button:hover,#restart:hover{background:#004080}
+#status{font-weight:bold;margin-top:10px}

@@ -52,3 +52,9 @@ Vérifiez la présence de Node si besoin pour d'autres outils :
 node -v
 ```
 
+## Contribuer
+
+Avant de proposer une modification, mettez à jour le fichier
+[doc/fichier.md](doc/fichier.md) afin de conserver une trace de l'historique du
+projet.
+
