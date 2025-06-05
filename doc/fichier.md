@@ -29,3 +29,9 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Objectif** : afficher les crédits depuis le menu principal.
 - **Résultat** : ajout de `public/credits.html` et mise à jour de `public/apps.json` pour inclure la tuile "Crédits".
 
+## 2025-06-07
+
+- **Demande** : télécharger le dépôt Git à chaque mise à jour et afficher une pop-up "Importation terminée".
+- **Objectif** : forcer l'import complet du dépôt et notifier l'utilisateur à la fin.
+- **Résultat** : `/api/update` récupère désormais tout le dépôt avec `fetch --all` suivi d'un `reset --hard` et l'interface affiche un message lorsque l'import est terminé.
+

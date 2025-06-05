@@ -113,13 +113,9 @@ app.post('/api/update', async (req, res) => {
     if (!origin) {
       await git.addRemote('origin', REMOTE);
     }
-    await git.fetch();
-    const status = await git.status();
-    if (status.behind > 0) {
-      await git.pull('origin', 'main');
-      return res.json({ updated: true });
-    }
-    res.json({ updated: false });
+    await git.fetch(['--all']);
+    await git.reset(['--hard', 'origin/main']);
+    res.json({ updated: true });
   } catch (e) {
     console.error('update error', e);
     res.status(500).json({ error: 'git' });
