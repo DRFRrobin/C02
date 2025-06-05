@@ -5,7 +5,7 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10;
 
-const GAMES_DIR = path.join(__dirname, 'games');
+const GAMES_DIR = path.join(__dirname, 'public', 'games');
 
 const app = express();
 const USERS_FILE = path.join(__dirname, 'users.json');
@@ -55,7 +55,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;

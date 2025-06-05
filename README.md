@@ -1,6 +1,6 @@
 # C02 Group App Launcher
 
-Ce dépôt contient une petite interface web permettant de lancer différentes applications du groupe C02.
+Ce dépôt contient une petite interface web permettant de lancer différentes applications du groupe C02. Toutes les ressources côté client se trouvent dans le dossier `public/`.
 
 ## Prérequis
 
@@ -26,7 +26,7 @@ Pour des informations détaillées, consultez [doc/node-installation.md](doc/nod
    npm start
    ```
 2. Dans votre navigateur, rendez‑vous sur [http://localhost:3000/index.html](http://localhost:3000/index.html).
-3. Les tuiles disponibles s'affichent automatiquement à partir du fichier `apps.json`.
+3. Les tuiles disponibles s'affichent automatiquement à partir du fichier `public/apps.json`.
 
 Lors du premier lancement, un utilisateur **admin/admin** est créé automatiquement. Les mots de passe sont maintenant chiffrés avec **bcrypt** et les mots de passe existants sont convertis au premier démarrage.
 Une petite fenêtre de connexion s'affiche : saisissez ces identifiants pour accéder à la plateforme.
@@ -35,7 +35,7 @@ Il est désormais possible de créer d'autres comptes directement depuis l'écra
 ## Fonctionnement
 
 - **Mise à jour** : la page lit le fichier `apps.json` pour afficher les applications. Le bouton "Paramètres" permet d'activer la mise à jour automatique ou d'exécuter une mise à jour manuelle.
-- **Jeux** : la tuile "C02 Games" mène à un sous‑menu mis à jour automatiquement à chaque chargement. La liste est construite en scannant les fichiers HTML du dossier `games`. On y trouve un Pong jouable en solo ou à deux sur le même clavier, un Puissance 4 jouable en 1v1 ou contre l'ordinateur, ainsi que le jeu "Emoji Catcher".
+- **Jeux** : la tuile "C02 Games" mène à un sous‑menu mis à jour automatiquement à chaque chargement. La liste est construite en scannant les fichiers HTML du dossier `public/games`. On y trouve un Pong jouable en solo ou à deux sur le même clavier, un Puissance 4 jouable en 1v1 ou contre l'ordinateur, ainsi que le jeu "Emoji Catcher".
 - **Discord** : la tuile "C02 Discord" ouvrira le lien vers le serveur [Discord](https://discord.gg/AD6DvdaRyR).
 - **Gestion Users** : disponible uniquement pour les administrateurs, permet d'ajouter, modifier ou supprimer les comptes enregistrés côté serveur.
 - **Déconnexion** : un bouton en haut à droite permet de quitter la session courante.
