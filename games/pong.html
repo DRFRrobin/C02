@@ -3,14 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <title>Pong</title>
-<style>
-canvas { background:#000; display:block; margin:0 auto; }
-</style>
+<link rel="stylesheet" href="pong.css">
 </head>
 <body>
-<canvas id="pong" width="600" height="400"></canvas>
-<button id="modeBtn">Mode 2 joueurs</button>
-<button class="back-button" onclick="window.location.href='index.html'">Retour</button>
+<div id="menu" class="overlay">
+  <h1>Pong</h1>
+  <div id="history" class="history"></div>
+  <label>Joueur 1: <input id="p1Name" value="Joueur 1"></label>
+  <label>Joueur 2: <input id="p2Name" value="Joueur 2"></label>
+  <label>Mode:
+    <select id="mode">
+      <option value="pvp">1 vs 1</option>
+      <option value="ai">1 vs Ordinateur</option>
+    </select>
+  </label>
+  <label>Points pour gagner: <input id="maxScore" type="number" min="1" value="5"></label>
+  <label><input type="checkbox" id="infinite"> Infini</label>
+  <div class="buttons">
+    <button id="startBtn">Commencer</button>
+    <button id="openSettings">Paramètres</button>
+    <button class="back-button" onclick="window.location.href='index.html'">Menu principal</button>
+  </div>
+</div>
+
+<div id="settings" class="overlay hidden">
+  <h2>Paramètres</h2>
+  <label>Couleur joueur 1: <input type="color" id="color1" value="#ffffff"></label>
+  <label>Couleur joueur 2: <input type="color" id="color2" value="#ffffff"></label>
+  <button id="closeSettings">Fermer</button>
+</div>
+
+<div id="pause" class="overlay hidden">
+  <h2>Pause</h2>
+  <button id="resumeBtn">Reprendre</button>
+  <button id="pauseMenuBtn">Menu du jeu</button>
+  <button id="quitBtn">Quitter la partie</button>
+  <button id="menuBtn" onclick="window.location.href='index.html'">Menu principal</button>
+</div>
+
+<div id="end" class="overlay hidden">
+  <h2 id="endMsg"></h2>
+  <button id="endMenuBtn" onclick="window.location.href='index.html'">Menu principal</button>
+</div>
+
+<canvas id="pong"></canvas>
+<button id="pauseBtn" class="hidden">Pause</button>
 <script src="pong.js"></script>
 </body>
 </html>
