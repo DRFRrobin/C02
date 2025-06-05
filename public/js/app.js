@@ -18,9 +18,32 @@ const signupPass = document.getElementById('signupPass');
 const createUserBtn = document.getElementById('createUserBtn');
 const cancelSignup = document.getElementById('cancelSignup');
 const logoutBtn = document.getElementById('logoutBtn');
+const updateOverlay = document.getElementById('updateOverlay');
+const updateBar = document.querySelector('#updateProgress div');
 
 let currentUser = null;
 let autoUpdateInterval = null;
+
+async function checkUpdate(){
+  updateOverlay.classList.remove('hidden');
+  updateBar.style.width = '0%';
+  try {
+    const r = await fetch('/api/update', {method:'POST'});
+    if(r.ok){
+      const data = await r.json();
+      if(data.updated){
+        let w = 0;
+        const intv = setInterval(() => {
+          w += 10;
+          updateBar.style.width = w + '%';
+          if(w >= 100) clearInterval(intv);
+        }, 100);
+        await new Promise(res => setTimeout(res, 1100));
+      }
+    }
+  } catch(e) {}
+  updateOverlay.classList.add('hidden');
+}
 
 async function fetchCurrent() {
   const r = await fetch('/api/current');
@@ -56,6 +79,7 @@ function doLogin(){
 async function showApp(){
   loginForm.classList.add('hidden');
   appContainer.classList.remove('hidden');
+  await checkUpdate();
   const prefs = await fetchPreferences();
   autoUpdateCheckbox.checked = prefs.autoUpdate;
   await load();
