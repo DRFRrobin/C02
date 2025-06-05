@@ -47,3 +47,9 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Objectif** : afficher les noms de l'équipe de manière plus lisible.
 - **Résultat** : `public/credits.html` utilise une liste stylisée pour les noms et de nouvelles règles CSS ont été ajoutées.
 
+
+## 2025-06-10
+
+- **Demande** : mieux voir la partie de démonstration derrière le menu du Pong.
+- **Objectif** : rendre la fenêtre du menu plus transparente.
+- **Résultat** : l'opacité du fond de `.overlay` est passée de 0.8 à 0.5.
