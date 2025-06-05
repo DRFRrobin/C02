@@ -1,7 +1,7 @@
 const gameTiles = document.getElementById('gameTiles');
 
 function fetchGames() {
-  return fetch('games.json').then(r => r.json());
+  return fetch('/api/games').then(r => r.json());
 }
 
 function renderGames(list) {

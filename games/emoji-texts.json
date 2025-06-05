@@ -1,0 +1,18 @@
+{
+  "fr": {
+    "title": "Emoji Catcher",
+    "start": "Démarrer",
+    "restart": "Recommencer",
+    "score": "Score",
+    "lives": "Vies",
+    "gameOver": "Partie terminée"
+  },
+  "en": {
+    "title": "Emoji Catcher",
+    "start": "Start",
+    "restart": "Restart",
+    "score": "Score",
+    "lives": "Lives",
+    "gameOver": "Game Over"
+  }
+}
