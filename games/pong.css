@@ -1,0 +1,7 @@
+body{margin:0;background:#000;color:#fff;font-family:Arial,sans-serif;overflow:hidden}
+canvas{background:#000;display:block;margin:0 auto}
+.overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.8);padding:20px;border-radius:8px;text-align:center;color:#fff}
+.hidden{display:none}
+.buttons button, #pauseBtn{margin:5px;padding:10px 20px;background:#0055a4;border:none;border-radius:5px;color:#fff;cursor:pointer}
+.buttons button:hover,#pauseBtn:hover{background:#004080}
+.history{margin-bottom:10px;font-size:14px}
