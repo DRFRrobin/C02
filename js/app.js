@@ -8,6 +8,13 @@ const loginBtn = document.getElementById('loginBtn');
 const loginUser = document.getElementById('loginUser');
 const loginPass = document.getElementById('loginPass');
 const appContainer = document.getElementById('app');
+const openSignup = document.getElementById('openSignup');
+const signupForm = document.getElementById('signupForm');
+const signupUser = document.getElementById('signupUser');
+const signupPass = document.getElementById('signupPass');
+const createUserBtn = document.getElementById('createUserBtn');
+const cancelSignup = document.getElementById('cancelSignup');
+const logoutBtn = document.getElementById('logoutBtn');
 
 function initUsers() {
   if (!localStorage.getItem('users')) {
@@ -58,6 +65,29 @@ function showLogin(){
   loginForm.classList.remove('hidden');
 }
 
+function logout(){
+  sessionStorage.removeItem('currentUser');
+  showLogin();
+}
+
+function createUser(){
+  const users = getUsers();
+  if(!signupUser.value || !signupPass.value){
+    alert('Champs manquants');
+    return;
+  }
+  if(users.some(u=>u.username===signupUser.value)){
+    alert('Utilisateur existant');
+    return;
+  }
+  users.push({username:signupUser.value, password:signupPass.value, role:'user'});
+  localStorage.setItem('users', JSON.stringify(users));
+  signupUser.value='';
+  signupPass.value='';
+  signupForm.classList.add('hidden');
+  alert('Utilisateur créé');
+}
+
 function fetchApps() {
   return fetch('apps.json').then(r => r.json());
 }
@@ -90,6 +120,10 @@ autoUpdateCheckbox.addEventListener('change', e => {
 closeSettingsButton.addEventListener('click', () => settingsModal.classList.add('hidden'));
 
 loginBtn.addEventListener('click', doLogin);
+openSignup.addEventListener('click', () => signupForm.classList.remove('hidden'));
+cancelSignup.addEventListener('click', () => signupForm.classList.add('hidden'));
+createUserBtn.addEventListener('click', createUser);
+logoutBtn.addEventListener('click', logout);
 
 initUsers();
 if (currentUser()) {
