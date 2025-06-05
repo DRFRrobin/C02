@@ -34,7 +34,7 @@ Il est désormais possible de créer d'autres comptes directement depuis l'écra
 
 - **Mise à jour** : la page lit le fichier `apps.json` pour afficher les applications. Le bouton "Paramètres" permet d'activer la mise à jour automatique ou d'exécuter une mise à jour manuelle.
 - **Jeux** : la tuile "C02 Games" mène à un sous‑menu mis à jour automatiquement à chaque chargement. La liste est construite en scannant les fichiers HTML du dossier `games`. On y trouve un Pong jouable en solo ou à deux sur le même clavier, un Puissance 4 jouable en 1v1 ou contre l'ordinateur, ainsi que le jeu "Emoji Catcher".
-- **Discord** : la tuile "C02 Discord" ouvrira le lien vers le serveur (l'URL reste à renseigner).
+- **Discord** : la tuile "C02 Discord" ouvrira le lien vers le serveur [Discord](https://discord.gg/AD6DvdaRyR).
 - **Gestion Users** : disponible uniquement pour les administrateurs, permet d'ajouter, modifier ou supprimer les comptes enregistrés côté serveur.
 - **Déconnexion** : un bouton en haut à droite permet de quitter la session courante.
 
