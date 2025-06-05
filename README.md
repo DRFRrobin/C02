@@ -21,6 +21,13 @@ Pour des informations détaillées, consultez [doc/node-installation.md](doc/nod
    ```bash
    npm install
    ```
+   Vous pouvez définir la variable d'environnement `SESSION_SECRET` pour
+   personnaliser la clef utilisée par la session Express :
+   ```bash
+   export SESSION_SECRET="votre_cle"
+   ```
+   Depuis cette mise à jour, le serveur utilise le middleware **helmet** et
+   l'en-tête `X-Powered-By` est désactivé pour renforcer la sécurité.
    Puis lancez le serveur :
    ```bash
    npm start

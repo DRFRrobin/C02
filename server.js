@@ -3,12 +3,16 @@ const fs = require('fs');
 const path = require('path');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const simpleGit = require('simple-git');
+const helmet = require('helmet');
 const SALT_ROUNDS = 10;
 
 const GAMES_DIR = path.join(__dirname, 'public', 'games');
 
 const app = express();
+app.disable('x-powered-by');
+app.use(helmet());
 const USERS_FILE = path.join(__dirname, 'users.json');
 
 function loadUsers() {
@@ -37,11 +41,19 @@ function saveUsers(users) {
 }
 
 app.use(express.json());
+const SESSION_SECRET = process.env.SESSION_SECRET ||
+  crypto.randomBytes(16).toString('hex');
+
 app.use(
   session({
-    secret: 'c02secret',
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    },
   })
 );
 
