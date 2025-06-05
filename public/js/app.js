@@ -1,3 +1,4 @@
+// Gestion de l'interface principale et de l'authentification côté client
 const dynamicTiles = document.getElementById('appTiles');
 const settingsBtn = document.getElementById('settingsBtn');
 const usersBtn = document.getElementById('usersBtn');
@@ -25,6 +26,7 @@ const updateMessage = document.getElementById('updateMessage');
 let currentUser = null;
 let autoUpdateInterval = null;
 
+// Demande une mise à jour du dépôt au serveur
 async function checkUpdate(){
   updateMessage.textContent = 'Importation en cours...';
   updateOverlay.classList.remove('hidden');
@@ -49,6 +51,7 @@ async function checkUpdate(){
   updateMessage.textContent = 'Recherche de mise à jour...';
 }
 
+// Récupère l'utilisateur courant
 async function fetchCurrent() {
   const r = await fetch('/api/current');
   if (r.ok) {
@@ -59,10 +62,12 @@ async function fetchCurrent() {
   }
 }
 
+// Indique si l'utilisateur courant est administrateur
 function isAdmin(){
   return currentUser && currentUser.role === 'admin';
 }
 
+// Envoie la requête de connexion
 function doLogin(){
   fetch('/api/login', {
     method: 'POST',
@@ -80,6 +85,7 @@ function doLogin(){
   }).catch(() => alert('Identifiants incorrects'));
 }
 
+// Affiche l'application une fois connecté
 async function showApp(){
   loginForm.classList.add('hidden');
   appContainer.classList.remove('hidden');
@@ -91,6 +97,7 @@ async function showApp(){
   updateAdminTile();
 }
 
+// Retourne à l'écran de connexion
 function showLogin(){
   if (autoUpdateInterval) {
     clearInterval(autoUpdateInterval);
@@ -101,6 +108,7 @@ function showLogin(){
   loginForm.classList.remove('hidden');
 }
 
+// Déconnecte l'utilisateur
 function logout(){
   fetch('/api/logout', {method:'POST'}).then(() => {
     currentUser = null;
@@ -108,6 +116,7 @@ function logout(){
   });
 }
 
+// Crée un nouvel utilisateur via l'API
 function createUser(){
   if(!signupUser.value || !signupPass.value){
     alert('Champs manquants');
@@ -131,14 +140,17 @@ function createUser(){
   }).catch(()=>{});
 }
 
+// Charge la liste des applications disponibles
 function fetchApps() {
   return fetch('apps.json').then(r => r.json());
 }
 
+// Lit les préférences utilisateur auprès du serveur
 function fetchPreferences() {
   return fetch('/api/preferences').then(r => r.json());
 }
 
+// Enregistre la préférence de mise à jour automatique
 function savePreferences(value) {
   return fetch('/api/preferences', {
     method: 'POST',
@@ -147,6 +159,7 @@ function savePreferences(value) {
   });
 }
 
+// Génère les tuiles d'applications sur la page
 function renderTiles(apps) {
   tilesContainer.innerHTML = '';
   apps.forEach(app => {
@@ -159,10 +172,12 @@ function renderTiles(apps) {
   });
 }
 
+// Récupère la liste des apps puis les affiche
 function load() {
   return fetchApps().then(data => renderTiles(data.apps));
 }
 
+// Active ou désactive la mise à jour automatique
 function setupAutoUpdate(enabled){
   if (autoUpdateInterval){
     clearInterval(autoUpdateInterval);
@@ -173,6 +188,7 @@ function setupAutoUpdate(enabled){
   }
 }
 
+// Affiche le bouton de gestion des utilisateurs pour les admins
 function updateAdminTile(){
   if(isAdmin()){
     usersBtn.classList.remove('hidden');
@@ -181,6 +197,7 @@ function updateAdminTile(){
   }
 }
 
+// Enregistre tous les gestionnaires d'événements de l'interface
 manualUpdateButton.addEventListener('click', load);
 autoUpdateCheckbox.addEventListener('change', e => {
   savePreferences(e.target.checked);
@@ -198,6 +215,7 @@ cancelSignup.addEventListener('click', () => signupForm.classList.add('hidden'))
 createUserBtn.addEventListener('click', createUser);
 logoutBtn.addEventListener('click', logout);
 
+// Démarrage : récupération de l'état courant
 fetchCurrent().then(() => {
   if (currentUser) {
     showApp();

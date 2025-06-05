@@ -1,3 +1,7 @@
+/**
+ * Point d'entrée du serveur Express.
+ * Gère l'authentification, les préférences et la mise à jour du dépôt.
+ */
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -25,6 +29,10 @@ app.use(
 );
 const USERS_FILE = path.join(__dirname, 'users.json');
 
+/**
+ * Lit la liste des utilisateurs depuis le disque.
+ * Les mots de passe non chiffrés sont convertis lors du chargement.
+ */
 function loadUsers() {
   try {
     const users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
@@ -46,11 +54,15 @@ function loadUsers() {
   }
 }
 
+/**
+ * Sauvegarde la liste des utilisateurs sur le disque.
+ */
 function saveUsers(users) {
   fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
 }
 
 app.use(express.json());
+// Utilise la clef fournie ou en génère une pour la session Express
 const SESSION_SECRET = process.env.SESSION_SECRET ||
   crypto.randomBytes(16).toString('hex');
 
@@ -67,6 +79,7 @@ app.use(
   })
 );
 
+// Redirige vers la page de connexion si l'utilisateur n'est pas authentifié
 app.use((req, res, next) => {
   if (
     req.path.endsWith('.html') &&
@@ -80,6 +93,7 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Authentifie un utilisateur et crée la session
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
   const users = loadUsers();
@@ -96,14 +110,17 @@ app.post('/api/login', async (req, res) => {
   res.status(401).json({ ok: false });
 });
 
+// Détruit la session courante
 app.post('/api/logout', (req, res) => {
   req.session.destroy(() => res.json({ ok: true }));
 });
 
+// Renvoie l'utilisateur actuellement connecté
 app.get('/api/current', (req, res) => {
   res.json({ user: req.session.user || null });
 });
 
+// Préférences de l'utilisateur
 app.get('/api/preferences', (req, res) => {
   res.json({ autoUpdate: req.session.autoUpdate !== false });
 });
@@ -116,6 +133,7 @@ app.post('/api/preferences', (req, res) => {
 const git = simpleGit();
 const REMOTE = 'https://github.com/DRFRrobin/C02.git';
 
+// Met à jour les fichiers du dépôt local
 app.post('/api/update', async (req, res) => {
   try {
     const remotes = await git.getRemotes(true);
@@ -132,6 +150,7 @@ app.post('/api/update', async (req, res) => {
   }
 });
 
+// Liste les utilisateurs (administrateur uniquement)
 app.get('/api/users', (req, res) => {
   if (!req.session.user || req.session.user.role !== 'admin') {
     return res.status(403).json({ error: 'forbidden' });
@@ -140,6 +159,7 @@ app.get('/api/users', (req, res) => {
   res.json({ users });
 });
 
+// Ajoute un utilisateur (administrateur uniquement)
 app.post('/api/users', async (req, res) => {
   if (!req.session.user || req.session.user.role !== 'admin') {
     return res.status(403).json({ error: 'forbidden' });
@@ -155,6 +175,7 @@ app.post('/api/users', async (req, res) => {
   res.json({ ok: true });
 });
 
+// Modifie un utilisateur existant
 app.put('/api/users/:username', async (req, res) => {
   if (!req.session.user || req.session.user.role !== 'admin') {
     return res.status(403).json({ error: 'forbidden' });
@@ -170,6 +191,7 @@ app.put('/api/users/:username', async (req, res) => {
   res.json({ ok: true });
 });
 
+// Supprime un utilisateur
 app.delete('/api/users/:username', (req, res) => {
   if (!req.session.user || req.session.user.role !== 'admin') {
     return res.status(403).json({ error: 'forbidden' });
@@ -182,6 +204,7 @@ app.delete('/api/users/:username', (req, res) => {
   res.json({ ok: true });
 });
 
+// Retourne la liste des jeux présents dans le dossier public/games
 app.get('/api/games', (req, res) => {
   fs.readdir(GAMES_DIR, { withFileTypes: true }, (err, entries) => {
     if (err) return res.status(500).json({ error: 'fs' });

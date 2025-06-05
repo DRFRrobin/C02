@@ -47,3 +47,9 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Objectif** : afficher les noms de l'équipe de manière plus lisible.
 - **Résultat** : `public/credits.html` utilise une liste stylisée pour les noms et de nouvelles règles CSS ont été ajoutées.
 
+## 2025-06-10
+
+- **Demande** : commenter l'ensemble des programmes JavaScript.
+- **Objectif** : améliorer la lisibilité du code.
+- **Résultat** : ajout de nombreux commentaires dans `server.js` et les fichiers du dossier `public`.
+

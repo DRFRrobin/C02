@@ -1,3 +1,4 @@
+// Interface de gestion des comptes utilisateurs
 async function checkAdmin() {
   const r = await fetch('/api/current');
   const data = await r.json();
@@ -14,6 +15,7 @@ const roleInput = document.getElementById('userRole');
 const saveBtn = document.getElementById('saveUser');
 let editIndex = null;
 
+// Met à jour le tableau HTML avec la liste des comptes
 function render() {
   table.innerHTML = '';
   users.forEach((u, i) => {
@@ -23,6 +25,7 @@ function render() {
   });
 }
 
+// Récupère la liste des utilisateurs depuis le serveur
 async function loadUsers() {
   const r = await fetch('/api/users');
   if (r.ok) {
@@ -34,6 +37,7 @@ async function loadUsers() {
   }
 }
 
+// Gestion des boutons Edit et Supprimer dans le tableau
 table.addEventListener('click', e => {
   if (e.target.dataset.edit) {
     const u = users[e.target.dataset.edit];
@@ -48,6 +52,7 @@ table.addEventListener('click', e => {
   }
 });
 
+// Sauvegarde (création ou modification) d'un utilisateur
 saveBtn.addEventListener('click', () => {
   const u = {
     username: nameInput.value,
@@ -73,4 +78,5 @@ saveBtn.addEventListener('click', () => {
   roleInput.value = 'user';
 });
 
+// Vérifie les droits puis charge la liste des utilisateurs
 checkAdmin().then(loadUsers);

@@ -1,3 +1,4 @@
+// Petit jeu d'adresse : attrapez les bons émojis
 const startBtn = document.getElementById('startBtn');
 const diffSelect = document.getElementById('difficulty');
 diffSelect.value = localStorage.getItem('emojiDifficulty') || 'normal';
@@ -77,6 +78,7 @@ function loop(t){
 
 function updateHUD(){document.getElementById('score').textContent=score;document.getElementById('lives').textContent=lives;document.getElementById('best').textContent=high;document.getElementById('scoreLabel').firstChild.textContent=texts.score+': ';document.getElementById('livesLabel').firstChild.textContent=texts.lives+': ';}
 
+// Démarre une partie avec la difficulté choisie
 function start(){
   if(running)return; // avoid extra loops
   const diff=diffSelect.value;
@@ -88,6 +90,7 @@ function start(){
   loop();
 }
 
+// Affiche l'écran de fin et enregistre le score
 function gameOver(){
   running=false;paused=false;ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(0,0,width,height);ctx.fillStyle='#fff';ctx.font='30px Arial';ctx.fillText(texts.gameOver,width/2-ctx.measureText(texts.gameOver).width/2,height/2);
   high=Math.max(high,score);localStorage.setItem('emojiHigh',high);updateHUD();

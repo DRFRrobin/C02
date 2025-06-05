@@ -1,3 +1,4 @@
+// Implémentation d'un Pong personnalisable
 const canvas = document.getElementById('pong');
 const ctx = canvas.getContext('2d');
 
@@ -43,6 +44,7 @@ function resize(){
 window.addEventListener('resize', resize);
 resize();
 
+// Charge les couleurs sauvegardées
 function loadPrefs(){
   const data = JSON.parse(localStorage.getItem('pongPrefs')||'{}');
   if(data.colors){ colors = data.colors; color1Input.value = colors[0]; color2Input.value = colors[1]; }
@@ -51,6 +53,7 @@ function savePrefs(){
   localStorage.setItem('pongPrefs', JSON.stringify({colors}));
 }
 
+// Historique des parties précédentes
 function loadHistory(){
   const hist = JSON.parse(localStorage.getItem('pongHistory')||'[]');
   historyBox.innerHTML = hist.map(h=>`<div>${h.p1} ${h.s1} - ${h.s2} ${h.p2}</div>`).join('');
@@ -71,6 +74,7 @@ function initPositions(){
   ballVY = (Math.random()*4-2);
 }
 
+// Démarre la partie avec les paramètres saisis
 function startGame(){
   names = [p1NameInput.value||'Joueur 1', p2NameInput.value||'Joueur 2'];
   mode = modeSelect.value;
@@ -85,6 +89,7 @@ function startGame(){
   bounceCount = 0;
 }
 
+// Termine la partie et affiche le score
 function endGame(){
   running = false;
   addHistory({p1:names[0],p2:names[1],s1:score1,s2:score2});
@@ -94,6 +99,7 @@ function endGame(){
   loadHistory();
 }
 
+// Met en pause ou reprend le jeu
 function togglePause(){
   if(!running) return;
   paused = !paused;
@@ -121,6 +127,7 @@ pauseMenuBtn.addEventListener('click', () => {
   loadHistory();
 });
 document.getElementById('quitBtn').addEventListener('click', () => {paused=false;pauseOverlay.classList.add('hidden');endGame();});
+// Affiche la page de menu courante
 function updatePage(){
   pages.style.transform = `translateX(-${currentPage*100}%)`;
 }
@@ -169,10 +176,12 @@ function update(){
   }
 }
 
+// Replace la balle au centre
 function resetBall(){
   ballX=width/2;ballY=height/2;ballVX*=-1;ballVY=(Math.random()*4-2);bounceCount=0;
 }
 
+// Accélère la balle après plusieurs rebonds
 function bounce(){
   bounceCount++;
   if(accelInterval && bounceCount % accelInterval === 0){
@@ -181,6 +190,7 @@ function bounce(){
   }
 }
 
+// Dessine tous les éléments du jeu
 function draw(){
   ctx.clearRect(0,0,width,height);
   ctx.fillStyle=colors[0];
@@ -194,6 +204,7 @@ function draw(){
   ctx.fillText(score2||0,3*width/4,30);
 }
 
+// Boucle principale du jeu
 function loop(){
   requestAnimationFrame(loop);
   update();
@@ -205,4 +216,5 @@ loadHistory();
 initPositions();
 updatePage();
 infiniteCheckbox.dispatchEvent(new Event('change'));
+// Lancement de la boucle de rendu
 loop();
