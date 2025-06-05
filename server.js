@@ -2,6 +2,8 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const session = require('express-session');
+const bcrypt = require('bcrypt');
+const SALT_ROUNDS = 10;
 
 const GAMES_DIR = path.join(__dirname, 'games');
 
@@ -10,9 +12,20 @@ const USERS_FILE = path.join(__dirname, 'users.json');
 
 function loadUsers() {
   try {
-    return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+    const users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+    let changed = false;
+    users.forEach((u) => {
+      if (!u.password || !u.password.startsWith('$2')) {
+        u.password = bcrypt.hashSync(u.password || '', SALT_ROUNDS);
+        changed = true;
+      }
+    });
+    if (changed) saveUsers(users);
+    return users;
   } catch (e) {
-    const def = [{ username: 'admin', password: 'admin', role: 'admin' }];
+    const def = [
+      { username: 'admin', password: bcrypt.hashSync('admin', SALT_ROUNDS), role: 'admin' },
+    ];
     fs.writeFileSync(USERS_FILE, JSON.stringify(def, null, 2));
     return def;
   }
@@ -44,18 +57,20 @@ app.use((req, res, next) => {
 
 app.use(express.static(__dirname));
 
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
   const users = loadUsers();
-  const user = users.find(
-    (u) => u.username === username && u.password === password
-  );
-  if (user) {
-    req.session.user = { username: user.username, role: user.role };
-    res.json({ ok: true, user: req.session.user });
-  } else {
-    res.status(401).json({ ok: false });
+  const user = users.find((u) => u.username === username);
+  if (user && user.password) {
+    try {
+      const ok = await bcrypt.compare(password, user.password);
+      if (ok) {
+        req.session.user = { username: user.username, role: user.role };
+        return res.json({ ok: true, user: req.session.user });
+      }
+    } catch (e) {}
   }
+  res.status(401).json({ ok: false });
 });
 
 app.post('/api/logout', (req, res) => {
@@ -79,10 +94,11 @@ app.get('/api/users', (req, res) => {
   if (!req.session.user || req.session.user.role !== 'admin') {
     return res.status(403).json({ error: 'forbidden' });
   }
-  res.json({ users: loadUsers() });
+  const users = loadUsers().map((u) => ({ username: u.username, role: u.role }));
+  res.json({ users });
 });
 
-app.post('/api/users', (req, res) => {
+app.post('/api/users', async (req, res) => {
   if (!req.session.user || req.session.user.role !== 'admin') {
     return res.status(403).json({ error: 'forbidden' });
   }
@@ -91,23 +107,23 @@ app.post('/api/users', (req, res) => {
   if (users.some((u) => u.username === username)) {
     return res.status(400).json({ error: 'exists' });
   }
-  users.push({ username, password, role });
+  const hashed = await bcrypt.hash(password, SALT_ROUNDS);
+  users.push({ username, password: hashed, role });
   saveUsers(users);
   res.json({ ok: true });
 });
 
-app.put('/api/users/:username', (req, res) => {
+app.put('/api/users/:username', async (req, res) => {
   if (!req.session.user || req.session.user.role !== 'admin') {
     return res.status(403).json({ error: 'forbidden' });
   }
   const users = loadUsers();
   const idx = users.findIndex((u) => u.username === req.params.username);
   if (idx === -1) return res.status(404).json({ error: 'not found' });
-  users[idx] = {
-    username: req.params.username,
-    password: req.body.password,
-    role: req.body.role,
-  };
+  users[idx].role = req.body.role;
+  if (req.body.password) {
+    users[idx].password = await bcrypt.hash(req.body.password, SALT_ROUNDS);
+  }
   saveUsers(users);
   res.json({ ok: true });
 });
