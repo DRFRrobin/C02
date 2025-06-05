@@ -16,3 +16,9 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : corriger un problème de sécurité lié aux sessions Express.
 - **Objectif** : générer une clef aléatoire si `SESSION_SECRET` n'est pas défini et ajouter des en-têtes HTTP sécurisés.
 - **Résultat** : ajout de la configuration du module **helmet**, désactivation de `X-Powered-By` et documentation de la variable `SESSION_SECRET`.
+
+## 2025-06-05
+
+- **Demande** : le menu du jeu Pong n'apparaît pas sur certains écrans.
+- **Objectif** : s'assurer que la fenêtre reste visible quel que soit la taille de l'écran.
+- **Résultat** : ajout d'un `max-height` et d'un défilement vertical sur l'overlay pour afficher correctement le menu.
