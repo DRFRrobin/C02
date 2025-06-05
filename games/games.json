@@ -1,7 +1,7 @@
 {
   "games": [
-    { "id": "pong", "name": "Pong", "link": "pong.html" },
-    { "id": "connect4", "name": "Puissance 4", "link": "connect4.html" },
-    { "id": "emoji", "name": "Emoji Catcher", "link": "emoji.html" }
+    { "id": "pong", "name": "Pong", "link": "pong/index.html" },
+    { "id": "connect4", "name": "Puissance 4", "link": "connect4/index.html" },
+    { "id": "emoji", "name": "Emoji Catcher", "link": "emoji/index.html" }
   ]
 }

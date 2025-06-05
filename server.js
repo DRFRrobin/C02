@@ -125,20 +125,25 @@ app.delete('/api/users/:username', (req, res) => {
 });
 
 app.get('/api/games', (req, res) => {
-  fs.readdir(GAMES_DIR, (err, files) => {
+  fs.readdir(GAMES_DIR, { withFileTypes: true }, (err, entries) => {
     if (err) return res.status(500).json({ error: 'fs' });
     const games = [];
-    files
-      .filter((f) => f.endsWith('.html') && f !== 'index.html')
-      .forEach((f) => {
-        const filePath = path.join(GAMES_DIR, f);
-        let title = path.basename(f, '.html');
+    entries
+      .filter((e) => e.isDirectory())
+      .forEach((dir) => {
+        const indexFile = path.join(GAMES_DIR, dir.name, 'index.html');
+        if (!fs.existsSync(indexFile)) return;
+        let title = dir.name;
         try {
-          const contents = fs.readFileSync(filePath, 'utf8');
+          const contents = fs.readFileSync(indexFile, 'utf8');
           const m = contents.match(/<title>([^<]+)<\/title>/i);
           if (m) title = m[1];
         } catch (e) {}
-        games.push({ id: path.basename(f, '.html'), name: title, link: f });
+        games.push({
+          id: dir.name,
+          name: title,
+          link: path.join(dir.name, 'index.html'),
+        });
       });
     res.json({ games });
   });
