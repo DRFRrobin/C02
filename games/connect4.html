@@ -3,9 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <title>Puissance 4</title>
+<style>
+body { font-family: Arial, sans-serif; text-align: center; }
+.hidden { display: none; }
+table { border-spacing: 5px; margin: 20px auto; }
+td { width: 50px; height: 50px; border-radius: 50%; background: #eee; cursor: pointer; }
+.p1 { background: red; }
+.p2 { background: yellow; }
+#menu button { margin: 10px; }
+</style>
 </head>
 <body>
-<h1>Puissance 4 - en développement</h1>
-<p>Le jeu sera ajouté prochainement.</p>
+<h1>Puissance 4</h1>
+<div id="menu">
+  <button id="pvp">1 vs 1</button>
+  <button id="pvai">1 vs Ordinateur</button>
+</div>
+<div id="boardContainer" class="hidden"></div>
+<p id="status"></p>
+<button id="restart" class="hidden">Recommencer</button>
+<script src="connect4.js"></script>
 </body>
 </html>
