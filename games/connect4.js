@@ -65,6 +65,33 @@ function isBoardFull() {
   return board.every((row) => row.every((cell) => cell !== 0));
 }
 
+function getNextOpenRow(col) {
+  for (let r = ROWS - 1; r >= 0; r--) {
+    if (board[r][col] === 0) return r;
+  }
+  return -1;
+}
+
+function getAvailableCols() {
+  const cols = [];
+  for (let c = 0; c < COLS; c++) {
+    if (board[0][c] === 0) cols.push(c);
+  }
+  return cols;
+}
+
+function findWinningMove(player) {
+  for (let c = 0; c < COLS; c++) {
+    const r = getNextOpenRow(c);
+    if (r === -1) continue;
+    board[r][c] = player;
+    const win = checkWin(r, c);
+    board[r][c] = 0;
+    if (win) return c;
+  }
+  return -1;
+}
+
 function endGame(message) {
   statusEl.textContent = message;
   boardContainer.removeEventListener('click', handleClick);
@@ -93,11 +120,20 @@ function handleClick(e) {
 }
 
 function aiMove() {
-  const available = [];
-  for (let c = 0; c < COLS; c++) {
-    if (board[0][c] === 0) available.push(c);
+  let col = findWinningMove(2);
+  if (col === -1) {
+    col = findWinningMove(1); // block player
   }
-  const col = available[Math.floor(Math.random() * available.length)];
+  if (col === -1) {
+    const center = Math.floor(COLS / 2);
+    if (board[0][center] === 0) {
+      col = center;
+    }
+  }
+  if (col === -1) {
+    const available = getAvailableCols();
+    col = available[Math.floor(Math.random() * available.length)];
+  }
   const row = makeMove(col);
   renderBoard();
   if (checkWin(row, col)) {
