@@ -163,6 +163,8 @@ usersTile.addEventListener('click', () => window.location.href = 'users.html');
 closeSettingsButton.addEventListener('click', () => settingsModal.classList.add('hidden'));
 
 loginBtn.addEventListener('click', doLogin);
+loginUser.addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
+loginPass.addEventListener('keydown', e => { if(e.key === 'Enter') doLogin(); });
 openSignup.addEventListener('click', () => signupForm.classList.remove('hidden'));
 cancelSignup.addEventListener('click', () => signupForm.classList.add('hidden'));
 createUserBtn.addEventListener('click', createUser);
