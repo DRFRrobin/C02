@@ -41,3 +41,9 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Objectif** : autoriser les gestionnaires d'événements inline utilisés par les boutons.
 - **Résultat** : configuration de **helmet** pour relâcher la Content Security Policy et permettre `onclick="navigate(...)`.
 
+## 2025-06-09
+
+- **Demande** : présenter mieux les crédits.
+- **Objectif** : afficher les noms de l'équipe de manière plus lisible.
+- **Résultat** : `public/credits.html` utilise une liste stylisée pour les noms et de nouvelles règles CSS ont été ajoutées.
+

@@ -58,3 +58,17 @@ h1 { text-align:center; }
   background: #0055a4;
   transition: width 0.3s ease;
 }
+
+/* Mise en forme de la page de crédits */
+#creditsList {
+  list-style: none;
+  padding: 0;
+  margin: 20px auto;
+  max-width: 200px;
+  text-align: center;
+}
+
+#creditsList li {
+  margin: 5px 0;
+  font-size: 1.2em;
+}
