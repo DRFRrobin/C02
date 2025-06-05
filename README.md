@@ -2,6 +2,21 @@
 
 Ce dépôt contient une petite interface web permettant de lancer différentes applications du groupe C02.
 
+## Installer Python
+
+Assurez-vous de disposer d'une version récente de **Python** pour pouvoir lancer le serveur local.
+
+- **Linux (Debian/Ubuntu)** :
+  ```bash
+  sudo apt update
+  sudo apt install python3
+  ```
+- **Windows** : [Téléchargez l'installeur](https://www.python.org/downloads/windows/) et suivez les étapes.
+- **macOS** : [Téléchargez l'installeur](https://www.python.org/downloads/macos/) ou utilisez Homebrew :
+  ```bash
+  brew install python
+  ```
+
 ## Tester en local
 
 1. Ouvrez un terminal dans ce dossier et lancez un serveur web local :
