@@ -1,4 +1,6 @@
 const startBtn = document.getElementById('startBtn');
+const diffSelect = document.getElementById('difficulty');
+diffSelect.value = localStorage.getItem('emojiDifficulty') || 'normal';
 startBtn.disabled = true; // disable button until texts load
 let texts={};
 fetch('emoji-texts.json').then(r=>r.json()).then(data=>{
@@ -18,7 +20,8 @@ let basket={x:width/2-40,y:height-30,width:80,height:20};
 let items=[];
 let score=0,lives=3,high=Number(localStorage.getItem('emojiHigh')||0);
 let running=false,last=0,spawn=0;
-const interval=700;
+let interval=700;
+let speedMult=1;
 const emojis=['\u{1F34E}','\u{1F34C}','\u{1F347}','\u{1F349}','\u{1F353}','\u{1F34D}','\u{1F34B}','\u{1F351}','\u{1F352}'];
 
 function resize(){
@@ -35,7 +38,7 @@ canvas.addEventListener('mousemove',e=>running&&move(e.offsetX-basket.width/2));
 canvas.addEventListener('touchmove',e=>{if(!running)return;e.preventDefault();const rect=canvas.getBoundingClientRect();move(e.touches[0].clientX-rect.left-basket.width/2);},{passive:false});
 document.addEventListener('keydown',e=>{if(!running)return;if(e.key==='ArrowLeft')move(basket.x-20);if(e.key==='ArrowRight')move(basket.x+20);});
 
-function spawnItem(){const emoji=emojis[Math.floor(Math.random()*emojis.length)];items.push({emoji,x:Math.random()*(width-32)+16,y:-30,size:30,speed:2+Math.random()*2});}
+function spawnItem(){const emoji=emojis[Math.floor(Math.random()*emojis.length)];items.push({emoji,x:Math.random()*(width-32)+16,y:-30,size:30,speed:(2+Math.random()*2)*speedMult});}
 
 function update(dt){spawn+=dt;if(spawn>interval){spawnItem();spawn=0;}items.forEach(it=>{it.y+=it.speed;});items=items.filter(it=>{if(it.y>height) return false;if(it.y>basket.y-it.size && it.x>basket.x && it.x<basket.x+basket.width){if(it.emoji==='\u{1F34E}')score++;else{lives--;if(lives<=0){gameOver();}}return false;}return true;});}
 
@@ -47,6 +50,9 @@ function updateHUD(){document.getElementById('score').textContent=score;document
 
 function start(){
   if(running)return; // avoid extra loops
+  const diff=diffSelect.value;
+  if(diff==='easy'){interval=900;speedMult=0.8;}else if(diff==='hard'){interval=500;speedMult=1.4;}else{interval=700;speedMult=1;}
+  localStorage.setItem('emojiDifficulty',diff);
   score=0;lives=3;items=[];running=true;last=0;spawn=interval;
   startBtn.textContent=texts.restart;
   startBtn.disabled=true; // disable while game active

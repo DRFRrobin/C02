@@ -18,11 +18,16 @@ button:hover{background:#004080}
   <span id="livesLabel">Vies: <span id="lives">3</span></span>
   <span id="bestLabel">Best: <span id="best">0</span></span>
 </div>
-<canvas id="gameCanvas" width="480" height="600" aria-label="Emoji Catcher"></canvas>
-<div>
-  <button id="startBtn">Démarrer</button>
-  <button class="back-button" onclick="navigate('../index.html')">Retour</button>
-</div>
+  <canvas id="gameCanvas" width="480" height="600" aria-label="Emoji Catcher"></canvas>
+  <div>
+    <select id="difficulty">
+      <option value="easy">Facile</option>
+      <option value="normal" selected>Normal</option>
+      <option value="hard">Difficile</option>
+    </select>
+    <button id="startBtn">Démarrer</button>
+    <button class="back-button" onclick="navigate('../index.html')">Retour</button>
+  </div>
 <script src="../../js/transition.js"></script>
 <script src="emoji.js"></script>
 </body>
