@@ -11,10 +11,20 @@
   <input id="loginUser" placeholder="Utilisateur">
   <input id="loginPass" type="password" placeholder="Mot de passe">
   <button id="loginBtn">Se connecter</button>
+  <button id="openSignup">Créer un compte</button>
+</div>
+
+<div id="signupForm" class="modal hidden">
+  <h2>Nouvel utilisateur</h2>
+  <input id="signupUser" placeholder="Utilisateur">
+  <input id="signupPass" type="password" placeholder="Mot de passe">
+  <button id="createUserBtn">Créer</button>
+  <button id="cancelSignup">Annuler</button>
 </div>
 
 <div id="app" class="hidden">
   <h1>C02 Group Apps</h1>
+  <button id="logoutBtn">Déconnexion</button>
   <div id="tiles" class="tile-container"></div>
   <div id="settings" class="modal hidden">
     <h2>Paramètres</h2>
