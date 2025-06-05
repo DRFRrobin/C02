@@ -1,6 +1,6 @@
 const dynamicTiles = document.getElementById('appTiles');
-const settingsTile = document.getElementById('settingsTile');
-const usersTile = document.getElementById('usersTile');
+const settingsBtn = document.getElementById('settingsBtn');
+const usersBtn = document.getElementById('usersBtn');
 const tilesContainer = dynamicTiles;
 const settingsModal = document.getElementById('settings');
 const autoUpdateCheckbox = document.getElementById('autoUpdate');
@@ -147,9 +147,9 @@ function setupAutoUpdate(enabled){
 
 function updateAdminTile(){
   if(isAdmin()){
-    usersTile.classList.remove('hidden');
+    usersBtn.classList.remove('hidden');
   } else {
-    usersTile.classList.add('hidden');
+    usersBtn.classList.add('hidden');
   }
 }
 
@@ -158,8 +158,8 @@ autoUpdateCheckbox.addEventListener('change', e => {
   savePreferences(e.target.checked);
   setupAutoUpdate(e.target.checked);
 });
-settingsTile.addEventListener('click', () => settingsModal.classList.remove('hidden'));
-usersTile.addEventListener('click', () => window.location.href = 'users.html');
+settingsBtn.addEventListener('click', () => settingsModal.classList.remove('hidden'));
+usersBtn.addEventListener('click', () => window.location.href = 'users.html');
 closeSettingsButton.addEventListener('click', () => settingsModal.classList.add('hidden'));
 
 loginBtn.addEventListener('click', doLogin);

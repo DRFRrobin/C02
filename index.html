@@ -24,10 +24,12 @@
 
 <div id="app" class="hidden">
   <h1>C02 Group Apps</h1>
-  <button id="logoutBtn">Déconnexion</button>
+  <div id="topButtons">
+    <button id="logoutBtn">Déconnexion</button>
+    <button id="settingsBtn">Paramètres</button>
+    <button id="usersBtn" class="hidden">Gestion Users</button>
+  </div>
   <div id="tiles" class="tile-container">
-    <div id="settingsTile" class="tile">Paramètres</div>
-    <div id="usersTile" class="tile hidden">Gestion Users</div>
     <div id="appTiles" class="tile-container"></div>
   </div>
   <div id="settings" class="modal hidden">
