@@ -9,7 +9,7 @@ function renderGames(list) {
     const div = document.createElement('div');
     div.className = 'tile';
     div.textContent = game.name;
-    div.addEventListener('click', () => window.location.href = game.link);
+    div.addEventListener('click', () => navigate(game.link));
     gameTiles.appendChild(div);
   });
 }
