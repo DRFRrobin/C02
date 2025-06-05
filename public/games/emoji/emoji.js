@@ -44,6 +44,6 @@ function updateHUD(){document.getElementById('score').textContent=score;document
 
 function start(){score=0;lives=3;items=[];running=true;last=0;spawn=interval;document.getElementById('startBtn').textContent=texts.restart;loop();}
 
-function gameOver(){running=false;ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(0,0,width,height);ctx.fillStyle='#fff';ctx.font='30px Arial';ctx.fillText(texts.gameOver,width/2-ctx.measureText(texts.gameOver).width/2,height/2);high=Math.max(high,score);localStorage.setItem('emojiHigh',high);}
+function gameOver(){running=false;ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(0,0,width,height);ctx.fillStyle='#fff';ctx.font='30px Arial';ctx.fillText(texts.gameOver,width/2-ctx.measureText(texts.gameOver).width/2,height/2);high=Math.max(high,score);localStorage.setItem('emojiHigh',high);updateHUD();}
 
 document.getElementById('startBtn').addEventListener('click',start);
