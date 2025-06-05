@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
+const simpleGit = require('simple-git');
 const SALT_ROUNDS = 10;
 
 const GAMES_DIR = path.join(__dirname, 'public', 'games');
@@ -88,6 +89,29 @@ app.get('/api/preferences', (req, res) => {
 app.post('/api/preferences', (req, res) => {
   req.session.autoUpdate = !!req.body.autoUpdate;
   res.json({ ok: true });
+});
+
+const git = simpleGit();
+const REMOTE = 'https://github.com/DRFRrobin/C02.git';
+
+app.post('/api/update', async (req, res) => {
+  try {
+    const remotes = await git.getRemotes(true);
+    const origin = remotes.find((r) => r.name === 'origin');
+    if (!origin) {
+      await git.addRemote('origin', REMOTE);
+    }
+    await git.fetch();
+    const status = await git.status();
+    if (status.behind > 0) {
+      await git.pull('origin', 'main');
+      return res.json({ updated: true });
+    }
+    res.json({ updated: false });
+  } catch (e) {
+    console.error('update error', e);
+    res.status(500).json({ error: 'git' });
+  }
 });
 
 app.get('/api/users', (req, res) => {
