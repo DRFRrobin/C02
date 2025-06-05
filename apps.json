@@ -2,6 +2,7 @@
   "apps": [
     { "id": "games", "name": "C02 Games", "link": "games/index.html" },
     { "id": "discord", "name": "C02 Discord", "link": "https://discord.com/invite/" },
-    { "id": "settings", "name": "Paramètres", "settings": true }
+    { "id": "settings", "name": "Paramètres", "settings": true },
+    { "id": "users", "name": "Gestion Users", "link": "users.html", "admin": true }
   ]
 }
