@@ -4,10 +4,11 @@
 <meta charset="UTF-8">
 <title>Gestion utilisateurs</title>
 <link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/transitions.css">
 </head>
-<body>
+<body class="fade">
 <h1>Gestion des utilisateurs</h1>
-<button class="back-button" onclick="window.location.href='index.html'">Retour</button>
+<button class="back-button" onclick="navigate('index.html')">Retour</button>
 <table id="userTable"></table>
 <h2>Ajouter / Modifier</h2>
 <input id="userName" placeholder="Nom">
@@ -17,6 +18,7 @@
   <option value="admin">admin</option>
 </select>
 <button id="saveUser">Enregistrer</button>
+<script src="js/nav.js"></script>
 <script src="js/users.js"></script>
 </body>
 </html>

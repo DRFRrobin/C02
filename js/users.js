@@ -2,7 +2,7 @@ async function checkAdmin() {
   const r = await fetch('/api/current');
   const data = await r.json();
   if (!data.user || data.user.role !== 'admin') {
-    window.location.href = 'index.html';
+    navigate('index.html');
   }
 }
 
@@ -30,7 +30,7 @@ async function loadUsers() {
     users = data.users;
     render();
   } else {
-    window.location.href = 'index.html';
+    navigate('index.html');
   }
 }
 

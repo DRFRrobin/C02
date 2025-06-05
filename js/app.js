@@ -126,7 +126,7 @@ function renderTiles(apps) {
     const div = document.createElement('div');
     div.className = 'tile';
     div.textContent = app.name;
-    div.addEventListener('click', () => window.location.href = app.link);
+    div.addEventListener('click', () => navigate(app.link));
     tilesContainer.appendChild(div);
   });
 }
@@ -159,7 +159,7 @@ autoUpdateCheckbox.addEventListener('change', e => {
   setupAutoUpdate(e.target.checked);
 });
 settingsTile.addEventListener('click', () => settingsModal.classList.remove('hidden'));
-usersTile.addEventListener('click', () => window.location.href = 'users.html');
+usersTile.addEventListener('click', () => navigate('users.html'));
 closeSettingsButton.addEventListener('click', () => settingsModal.classList.add('hidden'));
 
 loginBtn.addEventListener('click', doLogin);

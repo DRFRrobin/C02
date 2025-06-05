@@ -31,8 +31,9 @@ td:hover { background: #ddd; }
 #restart:hover { background:#004080; }
 #status { font-weight: bold; margin-top:10px; }
 </style>
+<link rel="stylesheet" href="../css/transitions.css">
 </head>
-<body>
+<body class="fade">
 <h1>Puissance 4</h1>
 <div id="menu">
   <button id="pvp">1 vs 1</button>
@@ -41,7 +42,8 @@ td:hover { background: #ddd; }
 <div id="boardContainer" class="hidden"></div>
 <p id="status"></p>
 <button id="restart" class="hidden">Recommencer</button>
-<button class="back-button" onclick="window.location.href='index.html'">Retour</button>
+<button class="back-button" onclick="navigate('index.html')">Retour</button>
 <script src="connect4.js"></script>
+<script src="../js/nav.js"></script>
 </body>
 </html>

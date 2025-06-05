@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <title>Pong</title>
 <link rel="stylesheet" href="pong.css">
+<link rel="stylesheet" href="../css/transitions.css">
 </head>
-<body>
+<body class="fade">
 <div id="menu" class="overlay">
   <div id="pages" class="pages">
     <div class="page" id="page0">
@@ -14,7 +15,7 @@
       <div class="buttons">
         <button id="startBtn">Commencer</button>
         <button id="openSettings">Paramètres</button>
-        <button class="back-button" onclick="window.location.href='index.html'">Menu principal</button>
+        <button class="back-button" onclick="navigate('index.html')">Menu principal</button>
       </div>
     </div>
     <div class="page" id="page1">
@@ -62,16 +63,17 @@
   <button id="resumeBtn">Reprendre</button>
   <button id="pauseMenuBtn">Menu du jeu</button>
   <button id="quitBtn">Quitter la partie</button>
-  <button id="menuBtn" onclick="window.location.href='index.html'">Menu principal</button>
+  <button id="menuBtn" onclick="navigate('index.html')">Menu principal</button>
 </div>
 
 <div id="end" class="overlay hidden">
   <h2 id="endMsg"></h2>
-  <button id="endMenuBtn" onclick="window.location.href='index.html'">Menu principal</button>
+  <button id="endMenuBtn" onclick="navigate('index.html')">Menu principal</button>
 </div>
 
 <canvas id="pong"></canvas>
 <button id="pauseBtn" class="hidden">Pause</button>
 <script src="pong.js"></script>
+<script src="../js/nav.js"></script>
 </body>
 </html>
