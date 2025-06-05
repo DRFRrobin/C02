@@ -16,38 +16,37 @@ const createUserBtn = document.getElementById('createUserBtn');
 const cancelSignup = document.getElementById('cancelSignup');
 const logoutBtn = document.getElementById('logoutBtn');
 
-function initUsers() {
-  if (!localStorage.getItem('users')) {
-    const def = [{username:'admin', password:'admin', role:'admin'}];
-    localStorage.setItem('users', JSON.stringify(def));
+let currentUser = null;
+
+async function fetchCurrent() {
+  const r = await fetch('/api/current');
+  if (r.ok) {
+    const data = await r.json();
+    currentUser = data.user;
+  } else {
+    currentUser = null;
   }
-}
-
-function getUsers(){
-  return JSON.parse(localStorage.getItem('users')) || [];
-}
-
-function currentUser(){
-  return JSON.parse(sessionStorage.getItem('currentUser'));
-}
-
-function setCurrentUser(u){
-  sessionStorage.setItem('currentUser', JSON.stringify(u));
 }
 
 function isAdmin(){
-  const u = currentUser();
-  return u && u.role === 'admin';
+  return currentUser && currentUser.role === 'admin';
 }
 
 function doLogin(){
-  const user = getUsers().find(u => u.username===loginUser.value && u.password===loginPass.value);
-  if(user){
-    setCurrentUser(user);
+  fetch('/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username: loginUser.value, password: loginPass.value })
+  }).then(r => {
+    if (r.ok) {
+      return r.json();
+    } else {
+      throw new Error('auth');
+    }
+  }).then(data => {
+    currentUser = data.user;
     showApp();
-  }else{
-    alert('Identifiants incorrects');
-  }
+  }).catch(() => alert('Identifiants incorrects'));
 }
 
 function showApp(){
@@ -66,26 +65,33 @@ function showLogin(){
 }
 
 function logout(){
-  sessionStorage.removeItem('currentUser');
-  showLogin();
+  fetch('/api/logout', {method:'POST'}).then(() => {
+    currentUser = null;
+    showLogin();
+  });
 }
 
 function createUser(){
-  const users = getUsers();
   if(!signupUser.value || !signupPass.value){
     alert('Champs manquants');
     return;
   }
-  if(users.some(u=>u.username===signupUser.value)){
-    alert('Utilisateur existant');
-    return;
-  }
-  users.push({username:signupUser.value, password:signupPass.value, role:'user'});
-  localStorage.setItem('users', JSON.stringify(users));
-  signupUser.value='';
-  signupPass.value='';
-  signupForm.classList.add('hidden');
-  alert('Utilisateur créé');
+  fetch('/api/users', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({username:signupUser.value, password:signupPass.value, role:'user'})
+  }).then(r => {
+    if(r.status===400){
+      alert('Utilisateur existant');
+      return Promise.reject();
+    }
+    return r.json();
+  }).then(()=>{
+    signupUser.value='';
+    signupPass.value='';
+    signupForm.classList.add('hidden');
+    alert('Utilisateur créé');
+  }).catch(()=>{});
 }
 
 function fetchApps() {
@@ -125,9 +131,10 @@ cancelSignup.addEventListener('click', () => signupForm.classList.add('hidden'))
 createUserBtn.addEventListener('click', createUser);
 logoutBtn.addEventListener('click', logout);
 
-initUsers();
-if (currentUser()) {
-  showApp();
-} else {
-  showLogin();
-}
+fetchCurrent().then(() => {
+  if (currentUser) {
+    showApp();
+  } else {
+    showLogin();
+  }
+});
