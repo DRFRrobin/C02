@@ -16,3 +16,9 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : corriger un problème de sécurité lié aux sessions Express.
 - **Objectif** : générer une clef aléatoire si `SESSION_SECRET` n'est pas défini et ajouter des en-têtes HTTP sécurisés.
 - **Résultat** : ajout de la configuration du module **helmet**, désactivation de `X-Powered-By` et documentation de la variable `SESSION_SECRET`.
+
+## 2025-06-05
+
+- **Demande** : rappeler de mettre à jour `doc/fichier.md` lors des contributions.
+- **Objectif** : s'assurer que chaque changement soit tracé dans l'historique du projet.
+- **Résultat** : ajout d'une section "Contribuer" dans le README précisant de mettre à jour `doc/fichier.md`.
