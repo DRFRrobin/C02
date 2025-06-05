@@ -1,3 +1,4 @@
+// Modules nécessaires au serveur
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -6,11 +7,14 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const simpleGit = require('simple-git');
 const helmet = require('helmet');
+// Nombre de tours pour le hachage des mots de passe
 const SALT_ROUNDS = 10;
 
+// Répertoire contenant les jeux
 const GAMES_DIR = path.join(__dirname, 'public', 'games');
 
 const app = express();
+// Désactive l'en-tête "X-Powered-By" et applique quelques règles de sécurité
 app.disable('x-powered-by');
 app.use(
   helmet({
@@ -23,8 +27,10 @@ app.use(
     },
   })
 );
+// Fichier de stockage des utilisateurs
 const USERS_FILE = path.join(__dirname, 'users.json');
 
+// Lit le fichier d'utilisateurs et convertit les mots de passe en hachés si besoin
 function loadUsers() {
   try {
     const users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
@@ -38,6 +44,7 @@ function loadUsers() {
     if (changed) saveUsers(users);
     return users;
   } catch (e) {
+    // S'il n'existe pas encore, on crée un fichier avec un compte administrateur
     const def = [
       { username: 'admin', password: bcrypt.hashSync('admin', SALT_ROUNDS), role: 'admin' },
     ];
@@ -46,14 +53,18 @@ function loadUsers() {
   }
 }
 
+// Sauvegarde la liste des utilisateurs sur disque
 function saveUsers(users) {
   fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
 }
 
+// Permet de lire les corps JSON des requêtes
 app.use(express.json());
+// Secret utilisé pour signer les cookies de session
 const SESSION_SECRET = process.env.SESSION_SECRET ||
   crypto.randomBytes(16).toString('hex');
 
+// Configuration de la session Express
 app.use(
   session({
     secret: SESSION_SECRET,
@@ -67,6 +78,7 @@ app.use(
   })
 );
 
+// Redirige vers la page de connexion si l'utilisateur n'est pas authentifié
 app.use((req, res, next) => {
   if (
     req.path.endsWith('.html') &&
@@ -78,8 +90,10 @@ app.use((req, res, next) => {
   next();
 });
 
+// Sert les fichiers statiques du dossier public
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Authentifie un utilisateur et démarre sa session
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
   const users = loadUsers();
@@ -96,26 +110,32 @@ app.post('/api/login', async (req, res) => {
   res.status(401).json({ ok: false });
 });
 
+// Termine la session courante
 app.post('/api/logout', (req, res) => {
   req.session.destroy(() => res.json({ ok: true }));
 });
 
+// Retourne l'utilisateur actuellement connecté
 app.get('/api/current', (req, res) => {
   res.json({ user: req.session.user || null });
 });
 
+// Préférences stockées en session
 app.get('/api/preferences', (req, res) => {
   res.json({ autoUpdate: req.session.autoUpdate !== false });
 });
 
+// Enregistre la préférence de mise à jour automatique
 app.post('/api/preferences', (req, res) => {
   req.session.autoUpdate = !!req.body.autoUpdate;
   res.json({ ok: true });
 });
 
+// Dépôt à partir duquel récupérer les mises à jour
 const git = simpleGit();
 const REMOTE = 'https://github.com/DRFRrobin/C02.git';
 
+// Met à jour l'application depuis le dépôt distant
 app.post('/api/update', async (req, res) => {
   try {
     const remotes = await git.getRemotes(true);
@@ -132,6 +152,7 @@ app.post('/api/update', async (req, res) => {
   }
 });
 
+// Liste tous les utilisateurs (admin uniquement)
 app.get('/api/users', (req, res) => {
   if (!req.session.user || req.session.user.role !== 'admin') {
     return res.status(403).json({ error: 'forbidden' });
@@ -140,6 +161,7 @@ app.get('/api/users', (req, res) => {
   res.json({ users });
 });
 
+// Création d'un nouvel utilisateur
 app.post('/api/users', async (req, res) => {
   if (!req.session.user || req.session.user.role !== 'admin') {
     return res.status(403).json({ error: 'forbidden' });
@@ -155,6 +177,7 @@ app.post('/api/users', async (req, res) => {
   res.json({ ok: true });
 });
 
+// Modification d'un utilisateur existant
 app.put('/api/users/:username', async (req, res) => {
   if (!req.session.user || req.session.user.role !== 'admin') {
     return res.status(403).json({ error: 'forbidden' });
@@ -170,6 +193,7 @@ app.put('/api/users/:username', async (req, res) => {
   res.json({ ok: true });
 });
 
+// Suppression d'un utilisateur
 app.delete('/api/users/:username', (req, res) => {
   if (!req.session.user || req.session.user.role !== 'admin') {
     return res.status(403).json({ error: 'forbidden' });
@@ -182,6 +206,7 @@ app.delete('/api/users/:username', (req, res) => {
   res.json({ ok: true });
 });
 
+// Renvoie la liste des jeux disponibles
 app.get('/api/games', (req, res) => {
   fs.readdir(GAMES_DIR, { withFileTypes: true }, (err, entries) => {
     if (err) return res.status(500).json({ error: 'fs' });
@@ -208,4 +233,5 @@ app.get('/api/games', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+// Démarrage du serveur HTTP
 app.listen(PORT, () => console.log('Server listening on ' + PORT));

@@ -1,3 +1,4 @@
+// Vérifie que l'utilisateur est administrateur avant d'afficher la page
 async function checkAdmin() {
   const r = await fetch('/api/current');
   const data = await r.json();
@@ -6,6 +7,7 @@ async function checkAdmin() {
   }
 }
 
+// Données et éléments DOM
 let users = [];
 const table = document.getElementById('userTable');
 const nameInput = document.getElementById('userName');
@@ -14,6 +16,7 @@ const roleInput = document.getElementById('userRole');
 const saveBtn = document.getElementById('saveUser');
 let editIndex = null;
 
+// Met à jour le tableau HTML avec la liste des comptes
 function render() {
   table.innerHTML = '';
   users.forEach((u, i) => {
@@ -23,6 +26,7 @@ function render() {
   });
 }
 
+// Récupère la liste des utilisateurs depuis le serveur
 async function loadUsers() {
   const r = await fetch('/api/users');
   if (r.ok) {
@@ -34,6 +38,7 @@ async function loadUsers() {
   }
 }
 
+// Gestion des clics sur la table pour éditer ou supprimer
 table.addEventListener('click', e => {
   if (e.target.dataset.edit) {
     const u = users[e.target.dataset.edit];
@@ -48,6 +53,7 @@ table.addEventListener('click', e => {
   }
 });
 
+// Création ou mise à jour d'un utilisateur
 saveBtn.addEventListener('click', () => {
   const u = {
     username: nameInput.value,
@@ -73,4 +79,5 @@ saveBtn.addEventListener('click', () => {
   roleInput.value = 'user';
 });
 
+// On vérifie les droits puis on charge la liste
 checkAdmin().then(loadUsers);

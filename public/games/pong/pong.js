@@ -1,3 +1,4 @@
+// Récupération du canvas de jeu
 const canvas = document.getElementById('pong');
 const ctx = canvas.getContext('2d');
 
@@ -19,6 +20,7 @@ const accelInput = document.getElementById('accel');
 const color1Input = document.getElementById('color1');
 const color2Input = document.getElementById('color2');
 
+// Variables de jeu
 let width, height;
 let p1Y, p2Y, ballX, ballY, ballVX, ballVY;
 let score1, score2;
@@ -34,6 +36,7 @@ let names = ['Joueur 1', 'Joueur 2'];
 let colors = ['#ffffff', '#ffffff'];
 let currentPage = 0;
 
+// Ajuste la taille du canvas lors du redimensionnement
 function resize(){
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -43,6 +46,7 @@ function resize(){
 window.addEventListener('resize', resize);
 resize();
 
+// Charge les préférences de couleur depuis le stockage local
 function loadPrefs(){
   const data = JSON.parse(localStorage.getItem('pongPrefs')||'{}');
   if(data.colors){ colors = data.colors; color1Input.value = colors[0]; color2Input.value = colors[1]; }
@@ -51,10 +55,12 @@ function savePrefs(){
   localStorage.setItem('pongPrefs', JSON.stringify({colors}));
 }
 
+// Affiche l'historique des scores
 function loadHistory(){
   const hist = JSON.parse(localStorage.getItem('pongHistory')||'[]');
   historyBox.innerHTML = hist.map(h=>`<div>${h.p1} ${h.s1} - ${h.s2} ${h.p2}</div>`).join('');
 }
+// Sauvegarde un nouveau résultat dans l'historique
 function addHistory(entry){
   const hist = JSON.parse(localStorage.getItem('pongHistory')||'[]');
   hist.unshift(entry);
@@ -62,6 +68,7 @@ function addHistory(entry){
   localStorage.setItem('pongHistory', JSON.stringify(hist));
 }
 
+// Place les raquettes et la balle au centre
 function initPositions(){
   p1Y = height/2 - 40;
   p2Y = height/2 - 40;
@@ -71,6 +78,7 @@ function initPositions(){
   ballVY = (Math.random()*4-2);
 }
 
+// Démarre la partie avec les options choisies
 function startGame(){
   names = [p1NameInput.value||'Joueur 1', p2NameInput.value||'Joueur 2'];
   mode = modeSelect.value;
@@ -85,6 +93,7 @@ function startGame(){
   bounceCount = 0;
 }
 
+// Affiche l'écran de fin de partie
 function endGame(){
   running = false;
   addHistory({p1:names[0],p2:names[1],s1:score1,s2:score2});
@@ -94,12 +103,14 @@ function endGame(){
   loadHistory();
 }
 
+// Met la partie en pause ou la reprend
 function togglePause(){
   if(!running) return;
   paused = !paused;
   pauseOverlay.classList.toggle('hidden', !paused);
 }
 
+// Mise en pause automatique si la page perd le focus
 window.addEventListener('visibilitychange', () => {
   if(document.hidden && running){
     paused = true;
@@ -107,6 +118,7 @@ window.addEventListener('visibilitychange', () => {
   }
 });
 
+// Gestion des boutons de pause et de menu
 pauseBtn.addEventListener('click', togglePause);
 document.getElementById('resumeBtn').addEventListener('click', () => {paused=false;pauseOverlay.classList.add('hidden');});
 pauseMenuBtn.addEventListener('click', () => {
@@ -121,10 +133,14 @@ pauseMenuBtn.addEventListener('click', () => {
   loadHistory();
 });
 document.getElementById('quitBtn').addEventListener('click', () => {paused=false;pauseOverlay.classList.add('hidden');endGame();});
+// Navigation dans le menu multi-pages
 function updatePage(){
   pages.style.transform = `translateX(-${currentPage*100}%)`;
 }
 
+document.getElementById('quitBtn').addEventListener('click', () => {paused=false;pauseOverlay.classList.add('hidden');endGame();});
+
+// Navigation et paramètres
 document.getElementById('startBtn').addEventListener('click', () => {currentPage=1;updatePage();});
 document.querySelectorAll('.next').forEach(btn=>btn.addEventListener('click',()=>{currentPage++;updatePage();}));
 document.querySelectorAll('.prev').forEach(btn=>btn.addEventListener('click',()=>{currentPage=Math.max(0,currentPage-1);updatePage();}));
@@ -134,10 +150,13 @@ document.getElementById('openSettings').addEventListener('click', () => settings
 document.getElementById('closeSettings').addEventListener('click', () => {colors=[color1Input.value,color2Input.value];savePrefs();settings.classList.add('hidden');});
 document.getElementById('endMenuBtn').addEventListener('click', ()=>{endOverlay.classList.add('hidden');menu.classList.remove('hidden');demo=true;currentPage=0;updatePage();loadHistory();});
 
+// État des touches pressées
 const keys = {};
+// Suivi des touches pour déplacer les raquettes
 document.addEventListener('keydown', e=>{keys[e.key]=true;if(e.key==='Escape')togglePause();});
 document.addEventListener('keyup', e=>{keys[e.key]=false;});
 
+// Logique de déplacement des éléments
 function update(){
   if(paused) return;
   const speed=6;
@@ -169,10 +188,12 @@ function update(){
   }
 }
 
+// Replace la balle au centre
 function resetBall(){
   ballX=width/2;ballY=height/2;ballVX*=-1;ballVY=(Math.random()*4-2);bounceCount=0;
 }
 
+// Accélère la balle après plusieurs rebonds
 function bounce(){
   bounceCount++;
   if(accelInterval && bounceCount % accelInterval === 0){
@@ -181,6 +202,7 @@ function bounce(){
   }
 }
 
+// Dessine l'état actuel du jeu
 function draw(){
   ctx.clearRect(0,0,width,height);
   ctx.fillStyle=colors[0];
@@ -194,12 +216,14 @@ function draw(){
   ctx.fillText(score2||0,3*width/4,30);
 }
 
+// Boucle de rendu appelée en continu
 function loop(){
   requestAnimationFrame(loop);
   update();
   draw();
 }
 
+// Initialisation du jeu au chargement
 loadPrefs();
 loadHistory();
 initPositions();
