@@ -20,29 +20,33 @@ const cancelSignup = document.getElementById('cancelSignup');
 const logoutBtn = document.getElementById('logoutBtn');
 const updateOverlay = document.getElementById('updateOverlay');
 const updateBar = document.querySelector('#updateProgress div');
+const updateMessage = document.getElementById('updateMessage');
 
 let currentUser = null;
 let autoUpdateInterval = null;
 
 async function checkUpdate(){
+  updateMessage.textContent = 'Importation en cours...';
   updateOverlay.classList.remove('hidden');
   updateBar.style.width = '0%';
   try {
     const r = await fetch('/api/update', {method:'POST'});
     if(r.ok){
-      const data = await r.json();
-      if(data.updated){
-        let w = 0;
-        const intv = setInterval(() => {
-          w += 10;
-          updateBar.style.width = w + '%';
-          if(w >= 100) clearInterval(intv);
-        }, 100);
-        await new Promise(res => setTimeout(res, 1100));
-      }
+      await r.json();
+      let w = 0;
+      const intv = setInterval(() => {
+        w += 10;
+        updateBar.style.width = w + '%';
+        if(w >= 100) clearInterval(intv);
+      }, 100);
+      await new Promise(res => setTimeout(res, 1100));
+      updateBar.style.width = '100%';
+      updateMessage.textContent = 'Importation terminée';
+      await new Promise(res => setTimeout(res, 1000));
     }
   } catch(e) {}
   updateOverlay.classList.add('hidden');
+  updateMessage.textContent = 'Recherche de mise à jour...';
 }
 
 async function fetchCurrent() {
