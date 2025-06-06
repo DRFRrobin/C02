@@ -53,3 +53,10 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : mieux voir la partie de démonstration derrière le menu du Pong.
 - **Objectif** : rendre la fenêtre du menu plus transparente.
 - **Résultat** : l'opacité du fond de `.overlay` est passée de 0.8 à 0.5.
+
+## 2025-06-11
+
+- **Demande** : ajouter Artmos aux crédits.
+- **Objectif** : mentionner Artmos dans la liste des contributeurs.
+- **Résultat** : "public/credits.html" affiche maintenant le nom Artmos.
+
