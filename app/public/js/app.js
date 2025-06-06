@@ -22,6 +22,7 @@ const logoutBtn = document.getElementById('logoutBtn');
 const updateOverlay = document.getElementById('updateOverlay');
 const updateBar = document.querySelector('#updateProgress div');
 const updateMessage = document.getElementById('updateMessage');
+const prInfo = document.getElementById('prInfo');
 
 // Utilisateur connecté et timer de mise à jour
 let currentUser = null;
@@ -46,6 +47,13 @@ async function checkUpdate(){
       updateBar.style.width = '100%';
       updateMessage.textContent = 'Importation terminée';
       await new Promise(res => setTimeout(res, 1000));
+      const info = await fetchUpdateInfo();
+      if(info.pr){
+        prInfo.textContent = `Test de la PR #${info.pr}`;
+        prInfo.classList.remove('hidden');
+      } else {
+        prInfo.classList.add('hidden');
+      }
     }
   } catch(e) {}
   updateOverlay.classList.add('hidden');
@@ -96,6 +104,13 @@ async function showApp(){
   await load();
   setupAutoUpdate(prefs.autoUpdate);
   updateAdminTile();
+  const info = await fetchUpdateInfo();
+  if(info.pr){
+    prInfo.textContent = `Test de la PR #${info.pr}`;
+    prInfo.classList.remove('hidden');
+  } else {
+    prInfo.classList.add('hidden');
+  }
 }
 
 // Retour à l'écran de connexion
@@ -105,6 +120,7 @@ function showLogin(){
     autoUpdateInterval = null;
   }
   updateAdminTile();
+  prInfo.classList.add('hidden');
   appContainer.classList.add('hidden');
   loginForm.classList.remove('hidden');
 }
@@ -149,6 +165,11 @@ function fetchApps() {
 // Lit les préférences utilisateur
 function fetchPreferences() {
   return fetch('/api/preferences').then(r => r.json());
+}
+
+// Récupère la branche ou la PR active
+function fetchUpdateInfo() {
+  return fetch('/api/update-info').then(r => r.json());
 }
 
 // Sauvegarde la préférence de mise à jour automatique

@@ -72,3 +72,12 @@ h1 { text-align:center; }
   margin: 5px 0;
   font-size: 1.2em;
 }
+
+.pr-info {
+  text-align: center;
+  background: #ffecb3;
+  margin: 10px auto;
+  padding: 5px 10px;
+  border-radius: 5px;
+  max-width: 300px;
+}

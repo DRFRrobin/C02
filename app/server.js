@@ -131,9 +131,17 @@ app.post('/api/preferences', (req, res) => {
   res.json({ ok: true });
 });
 
+// Renvoie la branche ou la pull request actuellement testée
+app.get('/api/update-info', (req, res) => {
+  res.json(updateInfo);
+});
+
 // Dépôt à partir duquel récupérer les mises à jour
 const git = simpleGit();
 const REMOTE = 'https://github.com/DRFRrobin/C02.git';
+
+// Informations sur la dernière mise à jour
+const updateInfo = { branch: 'main', pr: null };
 
 // Met à jour l'application depuis le dépôt distant
 app.post('/api/update', async (req, res) => {
@@ -154,9 +162,13 @@ app.post('/api/update', async (req, res) => {
     if (pr) {
       await git.fetch('origin', `pull/${pr}/head`);
       await git.reset(['--hard', 'FETCH_HEAD']);
+      updateInfo.pr = pr;
+      updateInfo.branch = null;
     } else {
       const target = branch ? `origin/${branch}` : 'origin/main';
       await git.reset(['--hard', target]);
+      updateInfo.branch = branch || 'main';
+      updateInfo.pr = null;
     }
 
     res.json({ updated: true });

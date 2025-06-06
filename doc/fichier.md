@@ -127,3 +127,8 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : valider le numéro de pull request envoyé à `/api/update`.
 - **Objectif** : empêcher l'appel avec une valeur non numérique.
 - **Résultat** : les serveurs renvoient `400` si `pr` n'est pas un nombre et la documentation précise cette contrainte.
+
+## 2025-06-24
+- **Demande** : indiquer la pull request actuellement testée.
+- **Objectif** : afficher le numéro de PR chargée sur le menu principal après une mise à jour.
+- **Résultat** : `/api/update` conserve la référence et l'interface signale "Test de la PR #X" lorsque c'est le cas.
