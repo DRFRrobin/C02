@@ -96,3 +96,9 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : moderniser le jeu Pong avec des classes et de nouvelles options.
 - **Objectif** : améliorer la lisibilité du code et proposer des paramètres de vitesse, une difficulté réglable, des bonus et un menu animé.
 - **Résultat** : nouveaux fichiers `game.js`, `pong.js` et `pong.css` implémentant ces fonctionnalités et mise à jour de `index.html`.
+
+## 2025-06-18
+
+- **Demande** : rendre le nouveau code Pong plus lisible.
+- **Objectif** : reformater les fichiers JavaScript et CSS pour faciliter la maintenance.
+- **Résultat** : `game.js`, `pong.js` et `pong.css` sont maintenant correctement indentés et commentés.
