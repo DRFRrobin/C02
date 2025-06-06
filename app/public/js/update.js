@@ -6,9 +6,13 @@ let selectedPr = null;
 async function loadPRs() {
   try {
     const r = await fetch('/api/prs');
-    if (!r.ok) return;
+    if (!r.ok) throw new Error('http');
     const data = await r.json();
     prList.innerHTML = '';
+    if (!Array.isArray(data.prs) || data.prs.length === 0) {
+      prList.textContent = 'Aucune pull request disponible.';
+      return;
+    }
     data.prs.forEach((pr) => {
       const div = document.createElement('div');
       const radio = document.createElement('input');
@@ -24,7 +28,9 @@ async function loadPRs() {
       div.appendChild(label);
       prList.appendChild(div);
     });
-  } catch (e) {}
+  } catch (e) {
+    prList.textContent = 'Erreur lors du chargement des pull requests.';
+  }
 }
 
 loadBtn.addEventListener('click', async () => {
