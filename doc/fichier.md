@@ -96,9 +96,3 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : empêcher l'injection de code HTML via les noms des joueurs dans l'historique de Pong.
 - **Objectif** : sécuriser l'affichage des entrées d'historique.
 - **Résultat** : `pong.js` construit désormais chaque entrée avec `textContent` au lieu de `innerHTML`.
-
-## 2025-06-18
-
-- **Demande** : enrichir le Pong avec une nouvelle version plus modulable.
-- **Objectif** : réécrire le jeu avec des classes pour faciliter les évolutions et ajouter des options de vitesse, une IA réglable et des power-ups.
-- **Résultat** : nouveaux fichiers `engine.js`, `pong.js` et `pong.css` avec un menu animé et la prise en charge des nouvelles options.
