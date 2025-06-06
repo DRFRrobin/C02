@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mise à jour</title>
+  <script>
+    async function runUpdate() {
+      try {
+        const res = await fetch('/api/update', { method: 'POST' });
+        const txt = res.ok ? 'Mise à jour terminée' : 'Échec de la mise à jour';
+        document.getElementById('status').textContent = txt;
+      } catch (e) {
+        document.getElementById('status').textContent = 'Erreur';
+      }
+    }
+    window.addEventListener('load', runUpdate);
+  </script>
+</head>
+<body>
+  <h1>Mise à jour de l\'application…</h1>
+  <p id="status">En cours…</p>
+</body>
+</html>

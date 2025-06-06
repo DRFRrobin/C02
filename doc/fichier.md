@@ -60,3 +60,9 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Objectif** : mentionner Artmos dans la liste des contributeurs.
 - **Résultat** : "public/credits.html" affiche maintenant le nom Artmos.
 
+## 2025-06-12
+
+- **Demande** : séparer le chargeur du coeur de l'application.
+- **Objectif** : isoler le serveur existant dans `app/` et créer un dossier `loader/` capable de mettre à jour `app/` via Git.
+- **Résultat** : nouvelle arborescence `loader/` et `app/`, le premier servant une page de progression et gérant les mises à jour.
+
