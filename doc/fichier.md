@@ -66,3 +66,9 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Objectif** : isoler le serveur existant dans `app/` et créer un dossier `loader/` capable de mettre à jour `app/` via Git.
 - **Résultat** : nouvelle arborescence `loader/` et `app/`, le premier servant une page de progression et gérant les mises à jour.
 
+## 2025-06-13
+
+- **Demande** : rafraîchir la liste après une mise à jour manuelle.
+- **Objectif** : exécuter `checkUpdate()` avant de recharger les applications.
+- **Résultat** : le bouton de mise à jour lance `checkUpdate()` puis re-génère les tuiles.
+

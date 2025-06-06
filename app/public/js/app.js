@@ -199,7 +199,10 @@ function updateAdminTile(){
 }
 
 // Gestion des différents boutons de l'interface
-manualUpdateButton.addEventListener('click', load);
+manualUpdateButton.addEventListener('click', async () => {
+  await checkUpdate();
+  await load();
+});
 autoUpdateCheckbox.addEventListener('change', e => {
   savePreferences(e.target.checked);
   setupAutoUpdate(e.target.checked);
