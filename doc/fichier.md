@@ -117,3 +117,8 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : ajouter une tuile pour tester une pull request.
 - **Objectif** : sélectionner le numéro de PR à utiliser lors de la mise à jour.
 - **Résultat** : nouvelle page `update.html` accessible via la tuile "Tester une PR" et appel de `/api/update?pr=`.
+
+## 2025-06-22
+- **Demande** : intégrer une page YouTube dans l'application.
+- **Objectif** : ajouter une tuile permettant d'accéder à un lecteur YouTube intégré.
+- **Résultat** : nouvelle page `youtube.html` et entrée correspondante dans `apps.json`.
