@@ -122,3 +122,8 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : intégrer une page YouTube dans l'application.
 - **Objectif** : ajouter une tuile permettant d'accéder à un lecteur YouTube intégré.
 - **Résultat** : nouvelle page `youtube.html` et entrée correspondante dans `apps.json`.
+
+## 2025-06-23
+- **Demande** : valider le numéro de pull request envoyé à `/api/update`.
+- **Objectif** : empêcher l'appel avec une valeur non numérique.
+- **Résultat** : les serveurs renvoient `400` si `pr` n'est pas un nombre et la documentation précise cette contrainte.
