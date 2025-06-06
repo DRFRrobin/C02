@@ -8,8 +8,34 @@
 <body>
 <h1>Puissance 4</h1>
 <div id="menu" class="overlay">
-  <button id="pvp">1 vs 1</button>
-  <button id="pvai">1 vs Ordinateur</button>
+  <div id="pages" class="pages">
+    <div class="page" id="page0">
+      <button id="startBtn">Commencer</button>
+      <button class="back-button" onclick="navigate('../index.html')">Menu principal</button>
+    </div>
+    <div class="page" id="page1">
+      <h2>Mode de jeu</h2>
+      <label>
+        <select id="mode">
+          <option value="pvp">1 vs 1</option>
+          <option value="ai">1 vs Ordinateur</option>
+        </select>
+      </label>
+      <div class="nav">
+        <button class="prev">Retour</button>
+        <button class="next">Suivant</button>
+      </div>
+    </div>
+    <div class="page" id="page2">
+      <label>Lignes: <input id="rowsInput" type="number" min="4" max="10" value="6"></label>
+      <label>Colonnes: <input id="colsInput" type="number" min="4" max="10" value="7"></label>
+      <label>Alignement: <input id="connectInput" type="number" min="3" max="10" value="4"></label>
+      <div class="nav">
+        <button class="prev">Retour</button>
+        <button id="launchBtn">Jouer</button>
+      </div>
+    </div>
+  </div>
 </div>
 <div id="boardContainer" class="hidden"></div>
 <p id="status"></p>

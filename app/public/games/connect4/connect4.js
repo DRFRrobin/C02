@@ -1,5 +1,7 @@
-// Paramètres du plateau
-const ROWS = 6, COLS = 7;
+// Paramètres du plateau (modifiables via le menu)
+let ROWS = 6,
+  COLS = 7,
+  CONNECT = 4;
 let board = [];
 let currentPlayer = 1;
 let vsAI = false;
@@ -45,7 +47,7 @@ function makeMove(col) {
 function countInDirection(r, c, dr, dc) {
   const player = board[r][c];
   let n = 0;
-  for (let i = 1; i < 4; i++) {
+  for (let i = 1; i < CONNECT; i++) {
     const y = r + dr * i;
     const x = c + dc * i;
     if (y < 0 || y >= ROWS || x < 0 || x >= COLS || board[y][x] !== player) break;
@@ -63,7 +65,7 @@ function checkWin(r, c) {
     [1, -1],
   ];
   return dirs.some(([dx, dy]) =>
-    countInDirection(r, c, dy, dx) + countInDirection(r, c, -dy, -dx) >= 3
+    countInDirection(r, c, dy, dx) + countInDirection(r, c, -dy, -dx) >= CONNECT - 1
   );
 }
 
@@ -162,8 +164,11 @@ function aiMove() {
 }
 
 // Lance une nouvelle partie
-function startGame(ai) {
-  vsAI = ai;
+function startGame(options) {
+  vsAI = options.ai;
+  ROWS = parseInt(options.rows, 10) || 6;
+  COLS = parseInt(options.cols, 10) || 7;
+  CONNECT = Math.max(3, Math.min(options.connect || 4, Math.max(ROWS, COLS)));
   initBoard();
   currentPlayer = 1;
   document.getElementById('menu').classList.add('hidden');
@@ -180,10 +185,28 @@ function backToMenu() {
   document.getElementById('menu').classList.remove('hidden');
   restartBtn.classList.add('hidden');
   statusEl.textContent = '';
+  currentPage = 0;
+  updatePage();
 }
 
 // Boutons de contrôle
 restartBtn.addEventListener('click', backToMenu);
-document.getElementById('pvp').addEventListener('click', () => startGame(false));
-document.getElementById('pvai').addEventListener('click', () => startGame(true));
+document.getElementById('launchBtn').addEventListener('click', () => {
+  startGame({
+    ai: document.getElementById('mode').value === 'ai',
+    rows: document.getElementById('rowsInput').value,
+    cols: document.getElementById('colsInput').value,
+    connect: document.getElementById('connectInput').value,
+  });
+});
+
+// Navigation entre les pages du menu
+const pages = document.getElementById('pages');
+let currentPage = 0;
+function updatePage(){
+  pages.style.transform = `translateX(-${currentPage * 100}%)`;
+}
+document.getElementById('startBtn').addEventListener('click', () => {currentPage=1;updatePage();});
+document.querySelectorAll('.next').forEach(btn=>btn.addEventListener('click',()=>{currentPage++;updatePage();}));
+document.querySelectorAll('.prev').forEach(btn=>btn.addEventListener('click',()=>{currentPage=Math.max(0,currentPage-1);updatePage();}));
 
