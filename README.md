@@ -48,7 +48,7 @@ Il est désormais possible de créer d'autres comptes directement depuis l'écra
 ## Fonctionnement
 
 - **Mise à jour** : la page lit le fichier `app/public/apps.json` pour afficher les applications. Le bouton "Paramètres" permet d'activer la mise à jour automatique ou d'exécuter une mise à jour manuelle. Il est désormais possible de préciser la branche via `branch=` ou le numéro de pull request via `pr=` (uniquement un nombre) lors de l'appel à `/api/update`.
-- **Jeux** : la tuile "C02 Games" mène à un sous‑menu mis à jour automatiquement à chaque chargement. La liste est construite en scannant les fichiers HTML du dossier `app/public/games`. On y trouve un Pong jouable en solo ou à deux sur le même clavier, un Puissance 4 jouable en 1v1 ou contre l'ordinateur, ainsi que le jeu "Emoji Catcher".
+- **Jeux** : la tuile "C02 Games" mène à un sous‑menu mis à jour automatiquement à chaque chargement. Chaque dossier dans `app/public/games` contient désormais un fichier `info.json` indiquant le nom du jeu et la page HTML à ouvrir. On y trouve un Pong jouable en solo ou à deux sur le même clavier, un Puissance 4 jouable en 1v1 ou contre l'ordinateur, ainsi que le jeu "Emoji Catcher".
 - **Discord** : la tuile "C02 Discord" ouvrira le lien vers le serveur [Discord](https://discord.gg/AD6DvdaRyR).
 - **Cha\u00eene YouTube** : permet de consulter une vid\u00e9o depuis une page int\u00e9gr\u00e9e.
 - **Tester une PR** : la tuile "Tester une PR" liste les cinq dernières pull requests du dépôt. Choisissez-en une puis cliquez sur **Charger la PR** pour l'utiliser. Le bouton **Décharger** ramène l'application sur la branche principale.
