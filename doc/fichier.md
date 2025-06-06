@@ -90,3 +90,9 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : corriger le double enregistrement du bouton "Quitter" dans Pong.
 - **Objectif** : s'assurer que la sortie du jeu ne soit déclenchée qu'une seule fois.
 - **Résultat** : une ligne en double a été retirée dans `pong.js`.
+
+## 2025-06-17
+
+- **Demande** : empêcher l'injection de code HTML via les noms des joueurs dans l'historique de Pong.
+- **Objectif** : sécuriser l'affichage des entrées d'historique.
+- **Résultat** : `pong.js` construit désormais chaque entrée avec `textContent` au lieu de `innerHTML`.
