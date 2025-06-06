@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const simpleGit = require('simple-git');
 const helmet = require('helmet');
+const https = require('https');
 // Nombre de tours pour le hachage des mots de passe
 const SALT_ROUNDS = 10;
 
@@ -29,6 +30,47 @@ app.use(
 );
 // Fichier de stockage des utilisateurs
 const USERS_FILE = path.join(__dirname, 'users.json');
+// Fichier stockant la branche ou la PR actuellement testée
+const STATUS_FILE = path.join(__dirname, '..', 'current.json');
+
+function saveStatus(info) {
+  fs.writeFileSync(STATUS_FILE, JSON.stringify(info));
+}
+
+function loadStatus() {
+  try {
+    return JSON.parse(fs.readFileSync(STATUS_FILE, 'utf8'));
+  } catch (e) {
+    return {};
+  }
+}
+
+function getLatestPRs() {
+  return new Promise((resolve, reject) => {
+    const options = {
+      hostname: 'api.github.com',
+      path: '/repos/DRFRrobin/C02/pulls?per_page=5',
+      headers: { 'User-Agent': 'c02-app' }
+    };
+    https
+      .get(options, (res) => {
+        let data = '';
+        res.on('data', (c) => (data += c));
+        res.on('end', () => {
+          try {
+            const prs = JSON.parse(data).map((p) => ({
+              number: p.number,
+              title: p.title,
+            }));
+            resolve(prs);
+          } catch (e) {
+            reject(e);
+          }
+        });
+      })
+      .on('error', reject);
+  });
+}
 
 // Lit le fichier d'utilisateurs et convertit les mots de passe en hachés si besoin
 function loadUsers() {
@@ -131,6 +173,22 @@ app.post('/api/preferences', (req, res) => {
   res.json({ ok: true });
 });
 
+// Informations sur la branche ou la PR en cours
+app.get('/api/status', (req, res) => {
+  res.json(loadStatus());
+});
+
+// Liste les cinq dernières pull requests du dépôt
+app.get('/api/prs', async (req, res) => {
+  try {
+    const prs = await getLatestPRs();
+    res.json({ prs });
+  } catch (e) {
+    console.error('prs fetch', e);
+    res.status(500).json({ error: 'github' });
+  }
+});
+
 // Dépôt à partir duquel récupérer les mises à jour
 const git = simpleGit();
 const REMOTE = 'https://github.com/DRFRrobin/C02.git';
@@ -154,9 +212,11 @@ app.post('/api/update', async (req, res) => {
     if (pr) {
       await git.fetch('origin', `pull/${pr}/head`);
       await git.reset(['--hard', 'FETCH_HEAD']);
+      saveStatus({ pr: Number(pr) });
     } else {
       const target = branch ? `origin/${branch}` : 'origin/main';
       await git.reset(['--hard', target]);
+      saveStatus({ branch: branch || 'main' });
     }
 
     res.json({ updated: true });
