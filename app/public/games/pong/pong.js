@@ -9,6 +9,27 @@ const historyBox=document.getElementById('history');
 const pauseBtn=document.getElementById('pauseBtn');
 const color1Input=document.getElementById('color1');
 const color2Input=document.getElementById('color2');
+const trailColorInput=document.getElementById('trailColor');
+const scoreBox=document.getElementById('score');
+const timerBox=document.getElementById('timer');
+const mapSelect=document.getElementById('mapSelect');
+
+async function loadMapList(){
+  const res=await fetch('maps/maps.json');
+  const maps=await res.json();
+  mapSelect.innerHTML='';
+  maps.forEach(m=>{
+    const opt=document.createElement('option');
+    opt.value=m.file;opt.textContent=m.name;mapSelect.appendChild(opt);
+  });
+}
+
+async function loadMap(file){
+  if(!file) return game.loadMap({});
+  const res=await fetch('maps/'+file);
+  const data=await res.json();
+  game.loadMap(data);
+}
 
 const p1NameInput=document.getElementById('p1Name');
 const p2NameInput=document.getElementById('p2Name');
@@ -29,9 +50,10 @@ let currentPage=0;
 function loadPrefs(){
   const data=JSON.parse(localStorage.getItem('pongPrefs')||'{}');
   if(data.colors){color1Input.value=data.colors[0];color2Input.value=data.colors[1];}
+  if(data.trail) trailColorInput.value=data.trail;
 }
 function savePrefs(){
-  localStorage.setItem('pongPrefs',JSON.stringify({colors:[color1Input.value,color2Input.value]}));
+  localStorage.setItem('pongPrefs',JSON.stringify({colors:[color1Input.value,color2Input.value],trail:trailColorInput.value}));
 }
 function loadHistory(){
   const hist=JSON.parse(localStorage.getItem('pongHistory')||'[]');
@@ -55,18 +77,21 @@ function startGame(){
   game.options({
     paddleSpeed:parseInt(paddleSpeedInput.value,10)||6,
     ballSpeed:parseInt(ballSpeedInput.value,10)||4,
-    aiLevel:parseInt(aiLevelInput.value,10)||5
+    aiLevel:parseInt(aiLevelInput.value,10)||5,
+    maxScore:parseInt(maxScoreInput.value,10)||5,
+    infinite:infiniteCheckbox.checked,
+    trailColor:trailColorInput.value
   });
   game.mode=modeSelect.value;
   game.p1.color=color1Input.value;
   game.p2.color=color2Input.value;
-  game.start();
+  loadMap(mapSelect.value).then(()=>game.start());
 }
 
 function endGame(){
   running=false;
-  addHistory({p1:p1NameInput.value,p2:p2NameInput.value,s1:0,s2:0});
-  document.getElementById('endMsg').textContent=`Fin de la partie`;
+  addHistory({p1:p1NameInput.value,p2:p2NameInput.value,s1:game.score1,s2:game.score2});
+  document.getElementById('endMsg').textContent=`${p1NameInput.value} ${game.score1} - ${game.score2} ${p2NameInput.value}`;
   endOverlay.classList.remove('hidden');
   pauseBtn.classList.add('hidden');
   loadHistory();
@@ -98,8 +123,25 @@ function updatePage(){
   pages.style.transform=`translateX(-${currentPage*100}%)`;
 }
 
+function updateHud(){
+  scoreBox.textContent=`${game.score1} - ${game.score2}`;
+  const t=game.getElapsedTime();
+  const m=Math.floor(t/60).toString();
+  const s=(t%60).toString().padStart(2,'0');
+  timerBox.textContent=`${m}:${s}`;
+  if(running && !game.running) endGame();
+  requestAnimationFrame(updateHud);
+}
+
+function startDemo(){
+  game.mode='demo';
+  game.options({});
+  loadMap('classic.json').then(()=>game.start());
+}
+
 loadPrefs();
 loadHistory();
 updatePage();
-
+loadMapList().then(startDemo);
+updateHud();
 game.loop();

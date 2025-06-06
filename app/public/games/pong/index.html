@@ -37,6 +37,9 @@
       <label>Vitesse raquette: <input id="paddleSpeed" type="number" min="2" value="6"></label>
       <label>Vitesse balle: <input id="ballSpeed" type="number" min="2" value="4"></label>
       <label>Difficulté IA: <input id="aiLevel" type="number" min="1" max="10" value="5"></label>
+      <label>Carte:
+        <select id="mapSelect"></select>
+      </label>
       <div class="nav">
         <button class="prev">Retour</button>
         <button class="next">Suivant</button>
@@ -57,6 +60,7 @@
   <h2>Paramètres</h2>
   <label>Couleur joueur 1: <input type="color" id="color1" value="#ffffff"></label>
   <label>Couleur joueur 2: <input type="color" id="color2" value="#ffffff"></label>
+  <label>Couleur traînée: <input type="color" id="trailColor" value="#ffffff"></label>
   <button id="closeSettings">Fermer</button>
 </div>
 
@@ -74,6 +78,7 @@
 </div>
 
 <canvas id="pong"></canvas>
+<div id="hud" class="hud"><span id="score">0 - 0</span><span id="timer">0:00</span></div>
 <button id="pauseBtn" class="hidden">Pause</button>
 <script src="../../js/transition.js"></script>
 <script type="module" src="pong.js"></script>
