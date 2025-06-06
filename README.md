@@ -33,16 +33,13 @@ Pour des informations détaillées, consultez [doc/node-installation.md](doc/nod
    ```
    Depuis cette mise à jour, le serveur utilise le middleware **helmet** et
    l'en-tête `X-Powered-By` est désactivé pour renforcer la sécurité.
-   Puis lancez le chargeur :
+2. Lancez l'application (mise à jour puis démarrage automatique) :
    ```bash
    npm start
    ```
-2. Pour démarrer l'application une fois à jour, exécutez :
-   ```bash
-   node app/server.js
-   ```
-3. Dans votre navigateur, rendez‑vous sur [http://localhost:3000/index.html](http://localhost:3000/index.html).
-4. Les tuiles disponibles s'affichent automatiquement à partir du fichier `app/public/apps.json`.
+   Au bout de quelques secondes, la page de connexion est disponible sur
+   [http://localhost:3000/index.html](http://localhost:3000/index.html).
+3. Les tuiles disponibles s'affichent automatiquement à partir du fichier `app/public/apps.json`.
 
 Lors du premier lancement, un utilisateur **admin/admin** est créé automatiquement. Les mots de passe sont maintenant chiffrés avec **bcrypt** et les mots de passe existants sont convertis au premier démarrage.
 Une petite fenêtre de connexion s'affiche : saisissez ces identifiants pour accéder à la plateforme.
