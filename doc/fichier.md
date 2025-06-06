@@ -107,3 +107,8 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : centrer l'affichage du menu de Pong.
 - **Objectif** : s'assurer que la fenetre de menu apparaisse toujours au milieu de l'ecran.
 - **Resultat** : la classe `.overlay` utilise desormais Flexbox pour placer son contenu au centre.
+
+## 2025-06-20
+- **Demande** : pouvoir tester une branche ou une pull request avant son intégration.
+- **Objectif** : choisir la référence Git à récupérer lors d'une mise à jour.
+- **Résultat** : l'API `/api/update` accepte maintenant les paramètres `branch` ou `pr` pour pointer vers la branche ou la pull request désirée.
