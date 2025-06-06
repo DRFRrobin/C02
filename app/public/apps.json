@@ -3,7 +3,7 @@
     { "id": "credits", "name": "Crédits", "link": "credits.html" },
     { "id": "games", "name": "C02 Games", "link": "games/index.html" },
     { "id": "discord", "name": "C02 Discord", "link": "https://discord.gg/AD6DvdaRyR" },
-    { "id": "youtube", "name": "Cha\u00eene YouTube", "link": "youtube.html" },
+    { "id": "youtube", "name": "Chaîne YouTube", "link": "youtube.html" },
     { "id": "pr", "name": "Tester une PR", "link": "update.html" }
   ]
 }

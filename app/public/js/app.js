@@ -146,6 +146,17 @@ function fetchApps() {
   return fetch('apps.json').then(r => r.json());
 }
 
+// Vérifie si YouTube est accessible
+function checkYoutube() {
+  return new Promise(resolve => {
+    const img = new Image();
+    const timer = setTimeout(() => resolve(false), 3000);
+    img.onload = () => { clearTimeout(timer); resolve(true); };
+    img.onerror = () => { clearTimeout(timer); resolve(false); };
+    img.src = 'https://www.youtube.com/favicon.ico?' + Date.now();
+  });
+}
+
 // Lit les préférences utilisateur
 function fetchPreferences() {
   return fetch('/api/preferences').then(r => r.json());
@@ -174,8 +185,17 @@ function renderTiles(apps) {
 }
 
 // Recharge la liste des applications
-function load() {
-  return fetchApps().then(data => renderTiles(data.apps));
+async function load() {
+  const data = await fetchApps();
+  let apps = data.apps;
+  const ytIndex = apps.findIndex(a => a.id === 'youtube');
+  if (ytIndex !== -1) {
+    const accessible = await checkYoutube();
+    if (!accessible) {
+      apps = apps.filter(a => a.id !== 'youtube');
+    }
+  }
+  renderTiles(apps);
 }
 
 // Active ou désactive la mise à jour automatique
