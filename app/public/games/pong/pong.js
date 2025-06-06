@@ -58,7 +58,12 @@ function savePrefs(){
 // Affiche l'historique des scores
 function loadHistory(){
   const hist = JSON.parse(localStorage.getItem('pongHistory')||'[]');
-  historyBox.innerHTML = hist.map(h=>`<div>${h.p1} ${h.s1} - ${h.s2} ${h.p2}</div>`).join('');
+  historyBox.innerHTML = '';
+  hist.forEach(h => {
+    const div = document.createElement('div');
+    div.textContent = `${h.p1} ${h.s1} - ${h.s2} ${h.p2}`;
+    historyBox.appendChild(div);
+  });
 }
 // Sauvegarde un nouveau résultat dans l'historique
 function addHistory(entry){
