@@ -29,6 +29,20 @@ app.use(
 );
 // Fichier de stockage des utilisateurs
 const USERS_FILE = path.join(__dirname, 'users.json');
+// Fichier stockant la branche ou la PR actuellement testée
+const STATUS_FILE = path.join(__dirname, '..', 'current.json');
+
+function saveStatus(info) {
+  fs.writeFileSync(STATUS_FILE, JSON.stringify(info));
+}
+
+function loadStatus() {
+  try {
+    return JSON.parse(fs.readFileSync(STATUS_FILE, 'utf8'));
+  } catch (e) {
+    return {};
+  }
+}
 
 // Lit le fichier d'utilisateurs et convertit les mots de passe en hachés si besoin
 function loadUsers() {
@@ -131,6 +145,11 @@ app.post('/api/preferences', (req, res) => {
   res.json({ ok: true });
 });
 
+// Informations sur la branche ou la PR en cours
+app.get('/api/status', (req, res) => {
+  res.json(loadStatus());
+});
+
 // Dépôt à partir duquel récupérer les mises à jour
 const git = simpleGit();
 const REMOTE = 'https://github.com/DRFRrobin/C02.git';
@@ -154,9 +173,11 @@ app.post('/api/update', async (req, res) => {
     if (pr) {
       await git.fetch('origin', `pull/${pr}/head`);
       await git.reset(['--hard', 'FETCH_HEAD']);
+      saveStatus({ pr: Number(pr) });
     } else {
       const target = branch ? `origin/${branch}` : 'origin/main';
       await git.reset(['--hard', target]);
+      saveStatus({ branch: branch || 'main' });
     }
 
     res.json({ updated: true });

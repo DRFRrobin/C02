@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const simpleGit = require('simple-git');
 const { spawn } = require('child_process');
+const fs = require('fs');
 
 const app = express();
 app.use(express.json());
@@ -9,6 +10,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const git = simpleGit(path.join(__dirname, '..', 'app'));
 const REMOTE = 'https://github.com/DRFRrobin/C02.git';
+const STATUS_FILE = path.join(__dirname, '..', 'current.json');
+
+function saveStatus(info) {
+  fs.writeFileSync(STATUS_FILE, JSON.stringify(info));
+}
 
 app.post('/api/update', async (req, res) => {
   try {
@@ -28,9 +34,11 @@ app.post('/api/update', async (req, res) => {
     if (pr) {
       await git.fetch('origin', `pull/${pr}/head`);
       await git.reset(['--hard', 'FETCH_HEAD']);
+      saveStatus({ pr: Number(pr) });
     } else {
       const target = branch ? `origin/${branch}` : 'origin/main';
       await git.reset(['--hard', target]);
+      saveStatus({ branch: branch || 'main' });
     }
 
     res.json({ updated: true });

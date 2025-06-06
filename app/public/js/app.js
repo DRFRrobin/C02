@@ -22,6 +22,7 @@ const logoutBtn = document.getElementById('logoutBtn');
 const updateOverlay = document.getElementById('updateOverlay');
 const updateBar = document.querySelector('#updateProgress div');
 const updateMessage = document.getElementById('updateMessage');
+const versionInfo = document.getElementById('versionInfo');
 
 // Utilisateur connecté et timer de mise à jour
 let currentUser = null;
@@ -91,6 +92,7 @@ async function showApp(){
   loginForm.classList.add('hidden');
   appContainer.classList.remove('hidden');
   await checkUpdate();
+  await updateVersionInfo();
   const prefs = await fetchPreferences();
   autoUpdateCheckbox.checked = prefs.autoUpdate;
   await load();
@@ -171,6 +173,22 @@ function savePreferences(value) {
   });
 }
 
+// Récupère les informations de version
+function fetchStatus() {
+  return fetch('/api/status').then(r => r.json()).catch(() => ({}));
+}
+
+async function updateVersionInfo() {
+  const info = await fetchStatus();
+  if (info.pr) {
+    versionInfo.textContent = 'PR #' + info.pr;
+  } else if (info.branch) {
+    versionInfo.textContent = 'Branche ' + info.branch;
+  } else {
+    versionInfo.textContent = '';
+  }
+}
+
 // Affiche dynamiquement les tuiles des applications
 function renderTiles(apps) {
   tilesContainer.innerHTML = '';
@@ -221,6 +239,7 @@ function updateAdminTile(){
 // Gestion des différents boutons de l'interface
 manualUpdateButton.addEventListener('click', async () => {
   await checkUpdate();
+  await updateVersionInfo();
   await load();
 });
 autoUpdateCheckbox.addEventListener('change', e => {
