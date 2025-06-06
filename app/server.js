@@ -312,19 +312,18 @@ app.get('/api/games', (req, res) => {
     entries
       .filter((e) => e.isDirectory())
       .forEach((dir) => {
-        const indexFile = path.join(GAMES_DIR, dir.name, 'index.html');
-        if (!fs.existsSync(indexFile)) return;
-        let title = dir.name;
+        const infoFile = path.join(GAMES_DIR, dir.name, 'info.json');
+        if (!fs.existsSync(infoFile)) return;
         try {
-          const contents = fs.readFileSync(indexFile, 'utf8');
-          const m = contents.match(/<title>([^<]+)<\/title>/i);
-          if (m) title = m[1];
-        } catch (e) {}
-        games.push({
-          id: dir.name,
-          name: title,
-          link: path.join(dir.name, 'index.html'),
-        });
+          const info = JSON.parse(fs.readFileSync(infoFile, 'utf8'));
+          games.push({
+            id: dir.name,
+            name: info.name || dir.name,
+            link: path.join(dir.name, info.page || 'index.html'),
+          });
+        } catch (e) {
+          // ignore invalid info files
+        }
       });
     res.json({ games });
   });

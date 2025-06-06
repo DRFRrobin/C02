@@ -148,7 +148,3 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Objectif** : tracer les actions du serveur et éviter l'affichage de "Erreur lors du chargement des pull requests.".
 - **Résultat** : nouvelle librairie `logger.js`, rotation automatique des fichiers, journalisation des routes principales et meilleure gestion des réponses GitHub.
 
-## 2025-06-28
-- **Demande** : améliorer le système de logs pour tout enregistrer, y compris le nom de l'utilisateur.
-- **Objectif** : tracer chaque action de l'application et notamment les clics sur les tuiles.
-- **Résultat** : les requêtes indiquent l'utilisateur connecté, un endpoint `/api/log` enregistre les événements et `navigate()` envoie désormais ces informations.
