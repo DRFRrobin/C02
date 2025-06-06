@@ -85,3 +85,8 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Objectif** : permettre de choisir le mode de jeu, la taille de la grille et la longueur d'alignement.
 - **Résultat** : nouvelle interface multi-pages dans `connect4/index.html` et logique mise à jour dans `connect4.js`.
 
+## 2025-06-16
+
+- **Demande** : corriger le double enregistrement du bouton "Quitter" dans Pong.
+- **Objectif** : s'assurer que la sortie du jeu ne soit déclenchée qu'une seule fois.
+- **Résultat** : une ligne en double a été retirée dans `pong.js`.

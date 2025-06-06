@@ -138,8 +138,6 @@ function updatePage(){
   pages.style.transform = `translateX(-${currentPage*100}%)`;
 }
 
-document.getElementById('quitBtn').addEventListener('click', () => {paused=false;pauseOverlay.classList.add('hidden');endGame();});
-
 // Navigation et paramètres
 document.getElementById('startBtn').addEventListener('click', () => {currentPage=1;updatePage();});
 document.querySelectorAll('.next').forEach(btn=>btn.addEventListener('click',()=>{currentPage++;updatePage();}));
