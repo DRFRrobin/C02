@@ -102,7 +102,6 @@ function saveUsers(users) {
 
 // Permet de lire les corps JSON des requêtes
 app.use(express.json());
-app.use((req, res, next) => { log(`${req.method} ${req.url}`); next(); });
 // Secret utilisé pour signer les cookies de session
 const SESSION_SECRET = process.env.SESSION_SECRET ||
   crypto.randomBytes(16).toString('hex');
@@ -120,6 +119,13 @@ app.use(
     },
   })
 );
+
+// Journalise chaque requête avec le nom de l'utilisateur
+app.use((req, res, next) => {
+  const user = req.session && req.session.user ? req.session.user.username : 'guest';
+  log(`${user} ${req.method} ${req.url}`);
+  next();
+});
 
 // Redirige vers la page de connexion si l'utilisateur n'est pas authentifié
 app.use((req, res, next) => {
@@ -183,6 +189,15 @@ app.post('/api/preferences', (req, res) => {
 // Informations sur la branche ou la PR en cours
 app.get('/api/status', (req, res) => {
   res.json(loadStatus());
+});
+
+// Point d'enregistrement d'une action côté client
+app.post('/api/log', (req, res) => {
+  const user = req.session && req.session.user ? req.session.user.username : 'guest';
+  const action = req.body && req.body.action ? req.body.action : 'event';
+  const detail = req.body && req.body.url ? req.body.url : '';
+  log(`${user} ${action} ${detail}`.trim());
+  res.json({ ok: true });
 });
 
 // Liste les cinq dernières pull requests du dépôt
