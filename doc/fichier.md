@@ -90,3 +90,9 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : corriger le double enregistrement du bouton "Quitter" dans Pong.
 - **Objectif** : s'assurer que la sortie du jeu ne soit déclenchée qu'une seule fois.
 - **Résultat** : une ligne en double a été retirée dans `pong.js`.
+
+## 2025-06-17
+
+- **Demande** : moderniser le jeu Pong avec des classes et de nouvelles options.
+- **Objectif** : améliorer la lisibilité du code et proposer des paramètres de vitesse, une difficulté réglable, des bonus et un menu animé.
+- **Résultat** : nouveaux fichiers `game.js`, `pong.js` et `pong.css` implémentant ces fonctionnalités et mise à jour de `index.html`.
