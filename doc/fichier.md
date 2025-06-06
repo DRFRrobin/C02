@@ -72,3 +72,10 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Objectif** : exécuter `checkUpdate()` avant de recharger les applications.
 - **Résultat** : le bouton de mise à jour lance `checkUpdate()` puis re-génère les tuiles.
 
+
+## 2025-06-14
+
+- **Demande** : retirer Artmos des crédits.
+- **Objectif** : ne plus afficher son nom sur la page de crédits.
+- **Résultat** : "public/credits.html" ne mentionne plus Artmos.
+
