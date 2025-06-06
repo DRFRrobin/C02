@@ -20,6 +20,9 @@ app.post('/api/update', async (req, res) => {
 
     const branch = req.body.branch || req.query.branch;
     const pr = req.body.pr || req.query.pr;
+    if (pr && !/^\d+$/.test(pr)) {
+      return res.status(400).json({ error: 'invalid pr' });
+    }
 
     await git.fetch(['--all']);
     if (pr) {
