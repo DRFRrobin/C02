@@ -102,3 +102,8 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : enrichir le Pong avec une nouvelle version plus modulable.
 - **Objectif** : réécrire le jeu avec des classes pour faciliter les évolutions et ajouter des options de vitesse, une IA réglable et des power-ups.
 - **Résultat** : nouveaux fichiers `engine.js`, `pong.js` et `pong.css` avec un menu animé et la prise en charge des nouvelles options.
+
+## 2025-06-19
+- **Demande** : centrer l'affichage du menu de Pong.
+- **Objectif** : s'assurer que la fenetre de menu apparaisse toujours au milieu de l'ecran.
+- **Resultat** : la classe `.overlay` utilise desormais Flexbox pour placer son contenu au centre.
