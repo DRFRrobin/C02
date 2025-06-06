@@ -142,3 +142,8 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : signaler une erreur lorsque la liste des PR ne peut pas être récupérée.
 - **Objectif** : informer l'utilisateur en cas d'échec du chargement des PRs.
 - **Résultat** : `update.js` affiche un message d'erreur si la requête `/api/prs` échoue.
+
+## 2025-06-27
+- **Demande** : simplifier l'ajout de nouveaux jeux.
+- **Objectif** : définir un petit fichier décrivant le nom et la page HTML de chaque jeu.
+- **Résultat** : chaque dossier de `games/` contient un fichier `game.json` lu par `/api/games` pour générer la liste des tuiles.
