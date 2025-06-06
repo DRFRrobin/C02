@@ -143,8 +143,19 @@ app.post('/api/update', async (req, res) => {
     if (!origin) {
       await git.addRemote('origin', REMOTE);
     }
+
+    const branch = req.body.branch || req.query.branch;
+    const pr = req.body.pr || req.query.pr;
+
     await git.fetch(['--all']);
-    await git.reset(['--hard', 'origin/main']);
+    if (pr) {
+      await git.fetch('origin', `pull/${pr}/head`);
+      await git.reset(['--hard', 'FETCH_HEAD']);
+    } else {
+      const target = branch ? `origin/${branch}` : 'origin/main';
+      await git.reset(['--hard', target]);
+    }
+
     res.json({ updated: true });
   } catch (e) {
     console.error('update error', e);
