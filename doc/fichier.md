@@ -112,3 +112,8 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : pouvoir tester une branche ou une pull request avant son intégration.
 - **Objectif** : choisir la référence Git à récupérer lors d'une mise à jour.
 - **Résultat** : l'API `/api/update` accepte maintenant les paramètres `branch` ou `pr` pour pointer vers la branche ou la pull request désirée.
+
+## 2025-06-21
+- **Demande** : ajouter une tuile pour tester une pull request.
+- **Objectif** : sélectionner le numéro de PR à utiliser lors de la mise à jour.
+- **Résultat** : nouvelle page `update.html` accessible via la tuile "Tester une PR" et appel de `/api/update?pr=`.

@@ -50,6 +50,7 @@ Il est désormais possible de créer d'autres comptes directement depuis l'écra
 - **Mise à jour** : la page lit le fichier `app/public/apps.json` pour afficher les applications. Le bouton "Paramètres" permet d'activer la mise à jour automatique ou d'exécuter une mise à jour manuelle. Il est désormais possible de préciser la branche via `branch=` ou le numéro de pull request via `pr=` lors de l'appel à `/api/update`.
 - **Jeux** : la tuile "C02 Games" mène à un sous‑menu mis à jour automatiquement à chaque chargement. La liste est construite en scannant les fichiers HTML du dossier `app/public/games`. On y trouve un Pong jouable en solo ou à deux sur le même clavier, un Puissance 4 jouable en 1v1 ou contre l'ordinateur, ainsi que le jeu "Emoji Catcher".
 - **Discord** : la tuile "C02 Discord" ouvrira le lien vers le serveur [Discord](https://discord.gg/AD6DvdaRyR).
+- **Tester une PR** : la tuile "Tester une PR" permet de saisir un numéro de pull request et lance `/api/update?pr=` pour mettre l'application à jour depuis cette PR.
 - **Gestion Users** : disponible uniquement pour les administrateurs, permet d'ajouter, modifier ou supprimer les comptes enregistrés côté serveur.
 - **Déconnexion** : un bouton en haut à droite permet de quitter la session courante.
 
