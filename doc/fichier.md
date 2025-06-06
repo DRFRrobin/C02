@@ -137,3 +137,8 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : choisir une pull request parmi les cinq dernières et pouvoir la charger ou la décharger.
 - **Objectif** : faciliter les tests des PRs directement depuis l'interface.
 - **Résultat** : `update.html` liste les cinq dernières PRs grâce à l'endpoint `/api/prs` et propose les boutons **Charger la PR** et **Décharger**.
+
+## 2025-06-26
+- **Demande** : signaler une erreur lorsque la liste des PR ne peut pas être récupérée.
+- **Objectif** : informer l'utilisateur en cas d'échec du chargement des PRs.
+- **Résultat** : `update.js` affiche un message d'erreur si la requête `/api/prs` échoue.
