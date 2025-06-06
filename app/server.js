@@ -50,7 +50,7 @@ function getLatestPRs() {
   return new Promise((resolve, reject) => {
     const options = {
       hostname: 'api.github.com',
-      path: '/repos/DRFRrobin/C02/pulls?per_page=5',
+      path: '/repos/DRFRrobin/C02/pulls?per_page=5&state=all&sort=updated&direction=desc',
       headers: { 'User-Agent': 'c02-app' }
     };
     https

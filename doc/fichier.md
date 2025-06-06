@@ -10,6 +10,8 @@ Pour chaque modification, renseignez :
 - **Résultat** : l'issue ou le changement final obtenu.
 
 Veillez à consigner chaque entrée chronologiquement pour garder une trace claire de l'historique.
+Depuis la PR #70, le titre de chaque entrée indique le numéro de la pull request,
+par exemple `## PR 70`.
 
 ## 2025-06-05
 
@@ -147,4 +149,9 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : ajouter un système de logs et corriger les erreurs lors de la récupération des PR.
 - **Objectif** : tracer les actions du serveur et éviter l'affichage de "Erreur lors du chargement des pull requests.".
 - **Résultat** : nouvelle librairie `logger.js`, rotation automatique des fichiers, journalisation des routes principales et meilleure gestion des réponses GitHub.
+
+## PR 70
+- **Demande** : afficher correctement les cinq dernières pull requests.
+- **Objectif** : lister les PR récentes dans `update.html` pour faciliter les tests.
+- **Résultat** : `getLatestPRs` interroge GitHub avec les options `state=all`, `sort=updated` et `direction=desc`.
 
