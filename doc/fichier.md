@@ -79,3 +79,9 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Objectif** : ne plus afficher son nom sur la page de crédits.
 - **Résultat** : "public/credits.html" ne mentionne plus Artmos.
 
+## 2025-06-15
+
+- **Demande** : ajouter un menu animé et des options de personnalisation pour Puissance 4.
+- **Objectif** : permettre de choisir le mode de jeu, la taille de la grille et la longueur d'alignement.
+- **Résultat** : nouvelle interface multi-pages dans `connect4/index.html` et logique mise à jour dans `connect4.js`.
+
