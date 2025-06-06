@@ -148,7 +148,3 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Objectif** : tracer les actions du serveur et éviter l'affichage de "Erreur lors du chargement des pull requests.".
 - **Résultat** : nouvelle librairie `logger.js`, rotation automatique des fichiers, journalisation des routes principales et meilleure gestion des réponses GitHub.
 
-## 2025-06-28
-- **Demande** : simplifier l'ajout de nouveaux jeux.
-- **Objectif** : décrire chaque jeu dans un petit fichier dédié au sein de son dossier.
-- **Résultat** : un fichier `info.json` renseigne le nom du jeu et la page HTML à ouvrir, et l'API `/api/games` lit désormais ces fichiers.
