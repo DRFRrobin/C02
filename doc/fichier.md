@@ -132,3 +132,8 @@ Veillez à consigner chaque entrée chronologiquement pour garder une trace clai
 - **Demande** : indiquer clairement quelle branche ou pull request est chargée.
 - **Objectif** : savoir depuis le menu principal si l'application teste une PR.
 - **Résultat** : ajout d'un fichier `current.json`, d'un endpoint `/api/status` et affichage de l'information dans le menu.
+
+## 2025-06-25
+- **Demande** : choisir une pull request parmi les cinq dernières et pouvoir la charger ou la décharger.
+- **Objectif** : faciliter les tests des PRs directement depuis l'interface.
+- **Résultat** : `update.html` liste les cinq dernières PRs grâce à l'endpoint `/api/prs` et propose les boutons **Charger la PR** et **Décharger**.

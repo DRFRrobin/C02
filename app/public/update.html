@@ -7,11 +7,12 @@
 </head>
 <body>
 <h1>Tester une Pull Request</h1>
-<button class="back-button" onclick="navigate('index.html')">Retour</button>
-<div>
-  <label>Numéro de PR <input id="prNumber" type="number" min="1"></label>
+<div id="prControls">
+  <button id="loadPr">Charger la PR</button>
+  <button id="unloadPr">Décharger</button>
+  <button class="back-button" onclick="navigate('index.html')">Retour</button>
 </div>
-<button id="applyPr">Mettre à jour</button>
+<div id="prList"></div>
 <script src="js/transition.js"></script>
 <script src="js/update.js"></script>
 </body>
