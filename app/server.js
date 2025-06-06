@@ -8,6 +8,7 @@ const crypto = require('crypto');
 const simpleGit = require('simple-git');
 const helmet = require('helmet');
 const https = require('https');
+const { log } = require('../logger');
 // Nombre de tours pour le hachage des mots de passe
 const SALT_ROUNDS = 10;
 
@@ -58,10 +59,9 @@ function getLatestPRs() {
         res.on('data', (c) => (data += c));
         res.on('end', () => {
           try {
-            const prs = JSON.parse(data).map((p) => ({
-              number: p.number,
-              title: p.title,
-            }));
+            const json = JSON.parse(data);
+            const list = Array.isArray(json) ? json : [];
+            const prs = list.map((p) => ({ number: p.number, title: p.title }));
             resolve(prs);
           } catch (e) {
             reject(e);
@@ -102,6 +102,7 @@ function saveUsers(users) {
 
 // Permet de lire les corps JSON des requêtes
 app.use(express.json());
+app.use((req, res, next) => { log(`${req.method} ${req.url}`); next(); });
 // Secret utilisé pour signer les cookies de session
 const SESSION_SECRET = process.env.SESSION_SECRET ||
   crypto.randomBytes(16).toString('hex');
@@ -145,16 +146,22 @@ app.post('/api/login', async (req, res) => {
       const ok = await bcrypt.compare(password, user.password);
       if (ok) {
         req.session.user = { username: user.username, role: user.role };
+        log(`login success ${username}`);
         return res.json({ ok: true, user: req.session.user });
       }
     } catch (e) {}
   }
+  log(`login failed ${username}`);
   res.status(401).json({ ok: false });
 });
 
 // Termine la session courante
 app.post('/api/logout', (req, res) => {
-  req.session.destroy(() => res.json({ ok: true }));
+  const u = req.session.user && req.session.user.username;
+  req.session.destroy(() => {
+    log(`logout ${u || 'unknown'}`);
+    res.json({ ok: true });
+  });
 });
 
 // Retourne l'utilisateur actuellement connecté
@@ -219,9 +226,11 @@ app.post('/api/update', async (req, res) => {
       saveStatus({ branch: branch || 'main' });
     }
 
+    log('update success ' + (pr ? 'pr ' + pr : branch ? 'branch ' + branch : 'main'));
     res.json({ updated: true });
   } catch (e) {
     console.error('update error', e);
+    log('update error');
     res.status(500).json({ error: 'git' });
   }
 });
@@ -308,4 +317,7 @@ app.get('/api/games', (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 // Démarrage du serveur HTTP
-app.listen(PORT, () => console.log('Server listening on ' + PORT));
+app.listen(PORT, () => {
+  log('Server listening on ' + PORT);
+  console.log('Server listening on ' + PORT);
+});

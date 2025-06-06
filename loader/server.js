@@ -4,9 +4,11 @@ const simpleGit = require('simple-git');
 const { spawn } = require('child_process');
 const fs = require('fs');
 const https = require('https');
+const { log } = require('../logger');
 
 const app = express();
 app.use(express.json());
+app.use((req, res, next) => { log(`${req.method} ${req.url}`); next(); });
 app.use(express.static(path.join(__dirname, 'public')));
 
 const git = simpleGit(path.join(__dirname, '..', 'app'));
@@ -30,10 +32,9 @@ function getLatestPRs() {
         res.on('data', (c) => (data += c));
         res.on('end', () => {
           try {
-            const prs = JSON.parse(data).map((p) => ({
-              number: p.number,
-              title: p.title,
-            }));
+            const json = JSON.parse(data);
+            const list = Array.isArray(json) ? json : [];
+            const prs = list.map((p) => ({ number: p.number, title: p.title }));
             resolve(prs);
           } catch (e) {
             reject(e);
@@ -79,16 +80,21 @@ app.post('/api/update', async (req, res) => {
       saveStatus({ branch: branch || 'main' });
     }
 
+    log('update success ' + (pr ? 'pr ' + pr : branch ? 'branch ' + branch : 'main'));
     res.json({ updated: true });
     res.on('finish', startMainServer);
   } catch (e) {
     console.error('update error', e);
+    log('update error');
     res.status(500).json({ error: 'git' });
   }
 });
 
 const PORT = process.env.PORT || 3000;
-const server = app.listen(PORT, () => console.log('Loader listening on ' + PORT));
+const server = app.listen(PORT, () => {
+  log('Loader listening on ' + PORT);
+  console.log('Loader listening on ' + PORT);
+});
 
 function startMainServer() {
   const child = spawn(process.execPath, [path.join(__dirname, '..', 'app', 'server.js')], {
@@ -96,5 +102,6 @@ function startMainServer() {
     stdio: 'inherit'
   });
   child.unref();
+  log('Switching to main server');
   server.close(() => process.exit(0));
 }
